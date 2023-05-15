@@ -1,0 +1,30 @@
+.container {
+  display: grid;
+flex-grow: 1;
+  /* grid-template-columns: 1fr 2fr 1fr 2fr 3fr; */
+  justify-content: space-between;
+
+  background-color: white;
+
+  grid-column-gap: 3px;
+}
+
+.type,.module_name,.group,.prof,.salle{
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  text-align: center;
+}
+.with_background {
+  background-color:#e6e8f9;
+  /* box-shadow: 2px 2px 7px 1px rgba(1,6,20,0.82); */
+}
+.type {
+  padding-left: 10px;
+}
+.salle {
+  padding-right: 222px;
+  background-color: blue;
+}

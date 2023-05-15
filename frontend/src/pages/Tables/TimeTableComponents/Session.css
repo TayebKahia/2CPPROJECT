@@ -1,0 +1,26 @@
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 2fr 2fr;
+  grid-template-rows: 1fr;
+  justify-content: space-between;
+  background-color: white;
+}
+.type,.module_name,.group,.prof,.salle{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  margin: 0;
+ 
+}
+.with_background {
+  background-color:#e6e8f9;
+  /* box-shadow: 2px 2px 7px 1px rgba(1,6,20,0.82); */
+}
+.type {
+  padding-left: 10px;
+}
+.salle{
+  padding-right: 10px;
+}

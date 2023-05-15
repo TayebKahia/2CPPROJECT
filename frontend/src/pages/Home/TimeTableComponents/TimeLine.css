@@ -1,0 +1,24 @@
+.first ,.second ,.third {
+
+display:flex;
+
+justify-content: space-around;
+
+
+}
+
+
+p{
+    display: inline-block;
+}
+.timeline{
+    display: grid;
+    grid-template-columns:1fr repeat(3,2fr) 1fr ; 
+    padding:3px 10px 3px 10px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    color: white;
+    background-color:#181B3A;
+}

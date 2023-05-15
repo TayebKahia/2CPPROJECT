@@ -1,0 +1,138 @@
+/* nav styling  */
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #181B3A;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    font-family: "Poppins", sans-serif;
+}
+
+nav img{
+    max-width: 70px; 
+}
+
+nav h1{
+    
+    margin-left:20px;
+    color:#fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+
+nav .logo{
+    display: flex;
+    
+    align-items: center;
+}
+
+
+.out-text{
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.circle{
+    padding:10px  20px;
+    background-color: #4FACF7;
+    border-radius: 20px;
+}
+
+/* styling ul list  */
+
+
+
+nav ul {
+    font-family: "Poppins" , sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    gap: 75px;
+    color:#fff;
+    font-weight: bold;
+    padding: 10px 5px;
+}
+
+nav ul a{
+    text-decoration: none;
+    color: white;
+    position:relative;
+}
+
+nav ul a::after{
+    content: "";
+    position: absolute;
+    background-color:#4FACF7 ;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: -5px;
+    transition: 0.3s;
+}
+nav ul a:hover::after{
+    width: 100%;
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    
+}
+
+
+nav ul li{
+    cursor: pointer;
+    cursor: hand;
+    letter-spacing: 2px;
+    padding: 10px 7px;
+    transition: all 0.3s;
+
+}
+
+nav ul li:hover{
+    color:#4FACF7;;
+}
+
+
+/* styling log out */
+
+.logout{
+    width:100%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none ;
+    position: relative;
+    cursor: pointer;
+    transition: 1s all;
+    
+}
+
+.logout:hover{
+    background-color: #4FACF7;
+}
+
+
+/* sub menu styling  */
+
+
+/* Go back styling  */
+
+.go-back-container{
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.goback-icon{
+    color:#fff;
+    font-size: 30px;
+}
+

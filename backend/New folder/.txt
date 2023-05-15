@@ -1,0 +1,61 @@
+Informational Responses (1xx):
+
+res.status(100): Continue
+res.status(101): Switching Protocols
+These codes indicate that the server has received the request and expects the client to continue with the request or switch protocols, respectively.
+Successful Responses (2xx):
+
+res.status(200): OK
+res.status(201): Created
+res.status(204): No Content
+These codes indicate that the request was successful and the server has completed the action as expected. For example, 200 indicates a standard successful response, 201 indicates a resource has been created successfully, and 204 indicates a successful request with no response body.
+Redirection Responses (3xx):
+
+res.status(301): Moved Permanently
+res.status(302): Found/Redirect
+res.status(304): Not Modified
+These codes indicate that the requested resource has been moved or temporarily relocated, or that the requested resource has not been modified since the last request.
+Client Error Responses (4xx):
+
+res.status(400): Bad Request
+res.status(401): Unauthorized
+res.status(404): Not Found
+res.status(403): Forbidden
+res.status(409): Conflict
+These codes indicate that there was an error or issue with the client's request. For example, 400 indicates a malformed or invalid request, 401 indicates the client is not authenticated, 404 indicates the requested resource was not found, and 403 indicates access to the resource is forbidden.
+Server Error Responses (5xx):
+
+res.status(500): Internal Server Error
+res.status(502): Bad Gateway
+res.status(503): Service Unavailable
+These codes indicate that there was an error or issue on the server side. For example, 500 indicates an internal server error occurred, 502 indicates a bad gateway, and 503 indicates the server is temporarily unable to handle the request.
+When handling a login operation, you can use the following HTTP status codes to indicate whether the login is successful or has failed:
+
+Successful Login:
+
+res.status(200): OK
+res.status(201): Created (if a new resource, such as a session token, is created upon successful login)
+res.status(204): No Content (if the response doesn't include a body)
+Failed Login:
+
+res.status(400): Bad Request (if the request is malformed or missing required parameters)
+res.status(401): Unauthorized (if the login credentials are invalid)
+res.status(403): Forbidden (if the user is authenticated but doesn't have access to perform the login operation)
+res.status(404): Not Found (if the user account or login endpoint is not found)
+The choice of status code depends on the specific requirements and context of your application. Here's a brief explanation of when to use each status code:
+
+Use 200 if the login is successful and you want to include a response body with additional information (e.g., user details, access token, etc.).
+
+Use 201 if, in addition to a successful login, a new resource (e.g., a session token) is created as a result of the login operation.
+
+Use 204 if the login is successful, but there is no additional information to be sent in the response body.
+
+Use 400 if there are errors in the login request itself, such as missing or malformed parameters.
+
+Use 401 if the provided login credentials (e.g., username/password) are incorrect or unauthorized.
+
+Use 403 if the user is authenticated but doesn't have permission to perform the login operation (e.g., account is locked or disabled).
+
+Use 404 if the user account or the login endpoint itself is not found.
+
+Remember that in addition to the status code, you can also include relevant information in the response body (e.g., error messages, tokens, user details) to provide more context to the client.

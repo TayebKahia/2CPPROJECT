@@ -1,0 +1,13 @@
+.hour_container{
+display:flex;
+flex-direction: column;
+box-shadow: 2px 3px 4px rgba(0,0,0,0.5);
+background-color: rgb(220, 220, 244);
+border:1px solid rgba(115,133,173,0.3);
+
+}
+.border_radius_bottom_right{
+border-bottom-right-radius: 10px;
+
+
+}

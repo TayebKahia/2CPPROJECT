@@ -1,0 +1,59 @@
+/* styling MgAccount  */
+
+.mg-account{
+    width:80px;
+    height:30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none ;
+    position: relative;
+    cursor: pointer;
+    transition: 1s all;
+}
+
+.icon{
+    font-size: 50px;
+    color:white;
+    transition:  0.2s;
+}
+
+.hvr-drop{
+    cursor: pointer;
+}
+
+.dropdown{
+    background-color: #fff;
+    top:40px;
+    border-radius: 5px;
+    color: black;
+    width:100px;
+    position: absolute;
+    display: none;
+    /* padding: 10px ; */
+    transition: 1s all;
+    
+}
+
+.mg-account:hover .dropdown{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+/* styling permission  */
+
+
+.permission{
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+.permission:hover{
+    background-color: #4FACF7;
+}

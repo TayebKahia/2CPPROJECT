@@ -1,0 +1,825 @@
+[
+  {
+    "day": "Dimanche",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah",
+    "salle": "amphiA"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah",
+    "salle": "SB1"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Dimanche",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "proba",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "logique",
+    "group": "G3",
+    "prof": "bouabdellah",
+    "salle": "SB1"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "isi",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "poo",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Dimanche",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah",
+    "salle": "amphiA"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Dimanche",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Dimanche",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "",
+    "prof": ""
+  },
+  {
+    "day": "Dimanche",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "",
+    "prof": ""
+  },
+  {
+    "day": "Dimanche",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "",
+    "prof": ""
+  },
+  {
+    "day": "Dimanche",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "",
+    "prof": ""
+  },
+  {
+    "day": "Dimanche",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "",
+    "prof": ""
+  },
+
+  {
+    "day": "Lundi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Lundi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "proba",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "logique",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "isi",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "poo",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Lundi",
+    "heur": "14-16",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "14-16",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "14-16",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "14-16",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Lundi",
+    "heur": "14-16",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Lundi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G1",
+    "prof": ""
+  },
+  {
+    "day": "Lundi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G2",
+    "prof": ""
+  },
+  {
+    "day": "Lundi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G3",
+    "prof": ""
+  },
+  {
+    "day": "Lundi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G4",
+    "prof": ""
+  },
+  {
+    "day": "Lundi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G5",
+    "prof": ""
+  },
+
+  {
+    "day": "Mardi",
+    "heur": "8-10",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "8-10",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "8-10",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "8-10",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "8-10",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Mardi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "proba",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "logique",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "isi",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "poo",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Mardi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mardi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Mardi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G1",
+    "prof": ""
+  },
+  {
+    "day": "Mardi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G2",
+    "prof": ""
+  },
+  {
+    "day": "Mardi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G3",
+    "prof": ""
+  },
+  {
+    "day": "Mardi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G4",
+    "prof": ""
+  },
+  {
+    "day": "Mardi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G5",
+    "prof": ""
+  },
+
+  {
+    "day": "Mercredi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Mercredi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "proba",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "logique",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "isi",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "poo",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Mercredi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Mercredi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Mercredi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G1",
+    "prof": ""
+  },
+  {
+    "day": "Mercredi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G2",
+    "prof": ""
+  },
+  {
+    "day": "Mercredi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G3",
+    "prof": ""
+  },
+  {
+    "day": "Mercredi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G4",
+    "prof": ""
+  },
+  {
+    "day": "Mercredi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G5",
+    "prof": ""
+  },
+
+  {
+    "day": "Jeudi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "8-10",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Jeudi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "proba",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "analyse",
+    "group": "G2",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "logique",
+    "group": "G3",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "isi",
+    "group": "G4",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "10-12",
+    "type": "TD",
+    "moduleName": "poo",
+    "group": "G5",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Jeudi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+  {
+    "day": "Jeudi",
+    "heur": "14-16",
+    "type": "cour",
+    "moduleName": "analyse",
+    "group": "G1",
+    "prof": "bouabdellah"
+  },
+
+  {
+    "day": "Jeudi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G1",
+    "prof": ""
+  },
+  {
+    "day": "Jeudi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G2",
+    "prof": ""
+  },
+  {
+    "day": "Jeudi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G3",
+    "prof": ""
+  },
+  {
+    "day": "Jeudi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G4",
+    "prof": ""
+  },
+  {
+    "day": "Jeudi",
+    "heur": "16-17",
+    "type": "",
+    "moduleName": "",
+    "group": "G5",
+    "prof": ""
+  }
+]
