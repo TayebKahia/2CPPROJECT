@@ -1,4 +1,6 @@
-
+const express = require("express");
+const app = express();
+app.use(express.json());
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const jwt_secret = "dskjdafjhkvhjak25454h21xc(0][]{}dfkjahpsofjv05";
@@ -30,7 +32,7 @@ exports.createUser = async (req, res) => {
     if (emailExists) {
       return res.status(409).json({ error: "Email already exists" });
     } else {
-      const encryptedpassword = await bcrypt.hash(password, 10);
+      const encryptedpassword = await bcrypt.hash(password,);
       const sql =
         "INSERT INTO enseignants (Nom, email, password, role) VALUES (?)";
       const values = [Nom, email, encryptedpassword, role];
@@ -51,18 +53,21 @@ exports.loginUser = async (req, res) => {
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
 
-    const result = await db.query(sql, values);
-
+    const result = await dbQuery(sql, [values]);
+    console.log(result);
     if (result.length === 0) {
+      console.log("erro if result is empty");
       return res
         .status(401)
         .json({ success: false, error: "Invalid credentials" });
     }
-
+    console.log(result[0]);
     const { password: hashedPassword, role } = result[0];
-
+    console.log(password, role, hashedPassword);
     const passwordMatch = await bcrypt.compare(password, hashedPassword);
+    console.log(passwordMatch);
     if (!passwordMatch) {
+      console.log("err in password match");
       return res
         .status(401)
         .json({ success: false, error: "Invalid credentials" });
@@ -82,7 +87,6 @@ exports.loginUser = async (req, res) => {
 exports.ForgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email);
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
 
@@ -92,13 +96,15 @@ exports.ForgotPassword = async (req, res) => {
       return res.status(401).json({ error: "Invalid email" });
     }
 
-    const { IDEns } = result[0];
-    const tokenPayload = { IDEns, email };
-    const token = jwt.sign(tokenPayload,jwt_secret, { expiresIn: "5m" });
+    const { IDEns, email: resultEmail } = result[0]; // Destructure IDEns and rename email to resultEmail
+    const tokenPayload = { IDEns, email: resultEmail };
+    const token = jwt.sign(tokenPayload, jwt_secret, { expiresIn: "30m" });
 
-    const link = `https://localhost:8000/reset-password/${IDEns}/${token}`;
+    const link = `https://localhost:8000/reset-password/${encodeURIComponent(
+      IDEns
+    )}/${encodeURIComponent(token)}`;
 
-    await sendPasswordResetEmail(email, link);
+    await sendPasswordResetEmail(resultEmail, link);
 
     res.status(200).json({ message: "Password reset email sent successfully" });
   } catch (error) {
@@ -112,13 +118,13 @@ async function sendPasswordResetEmail(email, link) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "t.kahia@esi-sba.dz",
-        pass: "yourpassword",
+        user: "tayebkahia4@gmail.com",
+        pass: "nodemailer2023",
       },
     });
 
     const mailOptions = {
-      from: "t.kahia@esi-sba.dz",
+      from: "tayebkahia4@gmail.com",
       to: email,
       subject: "Password Reset",
       text: `Click the following link to reset your password: ${link}`,
