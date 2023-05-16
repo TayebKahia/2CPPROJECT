@@ -25,7 +25,7 @@ function LoginPage(props){
                 <div className="login-part">
                     <Login role={props.role} setRole={props.setRole} setTable={props.setTable}  />
                     <div className="line"></div>
-                    <span className="login-text forget-password" onClick={navigate("/ForgetPassword")}>FORGET YOUR PASSWORD ?</span>
+                    <span className="login-text forget-password" onClick={()=>{navigate("/ForgetPassword")}}>FORGET YOUR PASSWORD ?</span>
                     <span className="login-text enter-as-student" onClick={AsStudent}>ENTER AS A STUDENT ?</span>
                 </div>
             </main>
