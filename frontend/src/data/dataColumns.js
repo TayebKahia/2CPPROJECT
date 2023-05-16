@@ -1,0 +1,35 @@
+export const dataColumns = [
+    {
+        Header:`Year`,
+        accessor:"year"
+    },
+    {
+        Header:`Day`,
+        accessor:"day"
+    },
+    {
+        Header:"Hour",
+        accessor:"hour"
+    }
+    ,{
+        Header:"Type",
+        accessor:"type"
+    }
+    ,
+    {
+        Header:"Salle",
+        accessor:"salle"
+    },
+    {
+        Header:"Module",
+        accessor:"module"
+    },
+    {
+        Header:"Teacher",
+        accessor:"teacher"
+    },
+    {
+        Header:"Group",
+        accessor:"group"
+    }
+]

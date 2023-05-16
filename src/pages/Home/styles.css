@@ -1,0 +1,141 @@
+.home-container{
+    /* height: 2000px; */
+    color:#fff;
+    font-family: "Poppins",sans-serif;
+}
+.wave{   
+    width: 100%;
+    padding-bottom: 100px;
+    margin-top: 90px;
+    aspect-ratio: 960/350;
+    background-image: url("../../assets/svg/background.svg");
+    background-repeat: no-repeat;
+    background-size:cover ;
+    background-position: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wave img{
+    margin-right: 10rem;
+}
+.wave-text {
+    word-wrap:break-word;
+    padding: 50px;
+    margin-left: 15rem;
+    max-width: 600px;
+    padding: 20px;   
+    font-weight: bold;
+    font-size: 2rem;
+    letter-spacing: .2rem; 
+    margin-bottom: 20px;
+}
+
+
+/* styling footer wave */
+
+.home-footer{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.footer-wave{
+    width: 100%;
+    aspect-ratio: 960/200;
+    background-image: url("../../assets/svg/backwards-background.svg");
+    background-repeat: no-repeat;
+    background-size:cover ;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 150px;
+    gap: 40px;
+}
+
+.home-social-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+
+.home-icon{
+    color: #FFF;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.home-icon:hover{
+    color:#4FACF7 ;
+}
+
+/* home content styling  */
+
+.home-content-container{
+    padding: 50px 100px;
+}
+
+/* table description styling  */
+
+.table-descrp-container{
+    padding: 50px ;
+    border: 5px solid #181B3A;
+    border-radius: 35px;
+    margin-bottom: 250px;
+    margin-top: 100px;
+    color:black;
+    display: flex;
+}
+
+.descrp-text{
+    max-width: 60%;
+    font-size: 1.5rem;
+}
+
+.table-pic{
+    background-color: red;
+    height: 100%;
+    width: 100%;
+}
+
+.table-pic img{
+    width:100%;
+}
+
+.blue {
+    color:#4FACF7;
+}
+
+
+/* footer card styling  */
+
+.footer-card-container{
+    /* background-color: blue; */
+    
+    
+}
+
+.footer-card-container img{
+    max-width: 250px;
+    
+}
+
+.cards{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20vw;
+    margin-bottom: 20px;
+}
+.footer-link {
+    width: 100%;
+    /* background-color: red; */
+    padding:15px 10px;
+    border: 5px solid #4FACF7;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
