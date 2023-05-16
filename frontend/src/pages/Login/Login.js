@@ -43,35 +43,35 @@ function Login (props){
         setIsSubmitting(true)
         
         if(formIsValid){
-            // fetch("http://127.0.0.1:8000/",{
-            //     method:"POST",
-            //     headers:{"Accept": "application/json","Content-type": "application/json"},
-            //     body:JSON.stringify({email:formData.email,password:formData.password})})
-            //     .then(res=>res.json())
-            //     .then(data=>{
-            //         setRole(data.role)
-            //         if(data.success){
-            //             props.setRole(data.role)
-            //             sessionStorage.setItem("role",data.role)
-            //             localStorage.setItem("table","Time Table")
-            //             navigate("/Home")
-            //         }
-            //     })
-            //     .catch(err=>console.log(err))
+            fetch("http://127.0.0.1:8000/login",{
+                method:"POST",
+                headers:{"Accept": "application/json","Content-type": "application/json"},
+                body:JSON.stringify({email:formData.email,password:formData.password})})
+                .then(res=>res.json())
+                .then(data=>{
+                    setRole(data.role)
+                    if(data.success){
+                        props.setRole(data.role)
+                        sessionStorage.setItem("role",data.role)
+                        localStorage.setItem("table","Time Table")
+                        navigate("/tables")
+                    }
+                })
+                .catch(err=>console.log(err))
             
             
-            for(let i=0 ; i<accountsData.length ; i++){
-                if(formData.email=== accountsData[i].email){
-                    if(formData.password === accountsData[i].password){
-                        props.setRole(accountsData[i].role)
-                        sessionStorage.setItem("role",accountsData[i].role)
+            // for(let i=0 ; i<accountsData.length ; i++){
+            //     if(formData.email=== accountsData[i].email){
+            //         if(formData.password === accountsData[i].password){
+            //             props.setRole(accountsData[i].role)
+            //             sessionStorage.setItem("role",accountsData[i].role)
                         
 
-                        navigate("/tables")
-                        break;
-                    }
-                }
-            }
+            //             navigate("/tables")
+            //             break;
+            //         }
+            //     }
+            // }
 
         }
     }
