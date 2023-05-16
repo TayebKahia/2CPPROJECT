@@ -43,6 +43,7 @@ function LoginPage(props) {
           </span>
         </div>
       </main>
+
       <Footer />
     </div>
   );
