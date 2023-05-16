@@ -1,5 +1,5 @@
 import "./App.css";
-import ForgetPasswordPage from "./pages/Login/ForgetPasswordPage";
+import ForgetPasswordPage from "./pages/Login/ForgetPassword/ForgetPasswordPage";
 import React from "react";
 import Navbar from "./layouts/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -10,7 +10,6 @@ import Settings from "./pages/settings/Settings";
 
 function App() {
   const [role, setRole] = React.useState(sessionStorage.getItem("role") || "");
-
   const [table, setTable] = React.useState(
     sessionStorage.getItem("table") || "Time Table"
   );
