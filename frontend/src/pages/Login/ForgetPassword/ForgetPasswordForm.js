@@ -20,16 +20,15 @@ const ForgetPasswordForm = () => {
           Accept: "application/json",
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ email: email })})
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data.message);
-          })
-          .catch((err) => console.log(email + "not sent"))
-      }
-    
+        body: JSON.stringify({ email: email }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((err) => console.log(email + "not sent"));
+    }
   }
-  
 
   const validateField = (email) => {
     const formula = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
