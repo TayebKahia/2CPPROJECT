@@ -10,7 +10,7 @@ import Settings from "./pages/settings/Settings";
 
 function App() {
   const [role, setRole] = React.useState(sessionStorage.getItem("role") || "");
-
+  console.log("projet chikor");
   const [table, setTable] = React.useState(
     sessionStorage.getItem("table") || "Time Table"
   );
