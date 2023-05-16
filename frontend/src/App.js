@@ -1,5 +1,5 @@
 import "./App.css";
-import ForgetPasswordPage from "./pages/Login/ForgetPasswordPage";
+import ForgetPasswordPage from "./pages/Login/ForgetPassword/ForgetPasswordPage";
 import React from "react";
 import Navbar from "./layouts/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";

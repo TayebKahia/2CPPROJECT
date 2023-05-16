@@ -35,7 +35,7 @@ const ForgetPasswordForm = () => {
 
     if (formula.test(email) || email === "") {
       setEmailIsValid(true);
-      setEmailError("  ");
+      setEmailError("");
     } else {
       setEmailIsValid(false);
       setEmailError("Please enter a valid email address");
