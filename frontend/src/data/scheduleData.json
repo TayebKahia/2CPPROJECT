@@ -5,8 +5,7 @@
     "type": "cour",
     "moduleName": "analyse",
     "group": "G1",
-    "prof": "bouabdellah",
-    "salle": "amphiA"
+    "prof": "bouabdellah"
   },
   {
     "day": "Dimanche",
@@ -14,8 +13,7 @@
     "type": "cour",
     "moduleName": "analyse",
     "group": "G2",
-    "prof": "bouabdellah",
-    "salle": "SB1"
+    "prof": "bouabdellah"
   },
   {
     "day": "Dimanche",
@@ -64,8 +62,7 @@
     "type": "TD",
     "moduleName": "logique",
     "group": "G3",
-    "prof": "bouabdellah",
-    "salle": "SB1"
+    "prof": "bouabdellah"
   },
   {
     "day": "Dimanche",
@@ -106,8 +103,7 @@
     "type": "cour",
     "moduleName": "analyse",
     "group": "G3",
-    "prof": "bouabdellah",
-    "salle": "amphiA"
+    "prof": "bouabdellah"
   },
   {
     "day": "Dimanche",

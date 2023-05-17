@@ -1,18 +1,21 @@
-
 .container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 2fr 2fr;
-  grid-template-rows: 1fr;
+flex-grow: 1;
+  grid-template-columns: 1fr 3fr 1fr 2fr;
   justify-content: space-between;
+
   background-color: white;
+
+  grid-column-gap: 3px;
 }
-.type,.module_name,.group,.prof,.salle{
+
+.type,.module_name,.group,.prof{
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: nowrap;
   margin: 0;
- 
+  text-align: center;
 }
 .with_background {
   background-color:#e6e8f9;
@@ -21,6 +24,6 @@
 .type {
   padding-left: 10px;
 }
-.salle{
+.prof {
   padding-right: 10px;
 }

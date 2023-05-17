@@ -32,7 +32,7 @@ exports.createUser = async (req, res) => {
     if (emailExists) {
       return res.status(409).json({ error: "Email already exists" });
     } else {
-      const encryptedpassword = await bcrypt.hash(password,);
+      const encryptedpassword = await bcrypt.hash(password);
       const sql =
         "INSERT INTO enseignants (Nom, email, password, role) VALUES (?)";
       const values = [Nom, email, encryptedpassword, role];
@@ -86,34 +86,41 @@ exports.loginUser = async (req, res) => {
 
 exports.ForgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, OTP } = req.body;
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
-
+    console.log(email,OTP)
     const result = await db.query(sql, values);
 
     if (result.length === 0) {
-      return res.status(401).json({ error: "Invalid email" });
+      console.log("error happen in length");
+      return res.status(401).json({ success: false, error: "Invalid email" });
     }
-
-    const { IDEns, email: resultEmail } = result[0]; // Destructure IDEns and rename email to resultEmail
+    console.log('the length is '+result.length);
+    /*const { IDEns, email: resultEmail } = result[0]; // Destructure IDEns and rename email to resultEmail
     const tokenPayload = { IDEns, email: resultEmail };
     const token = jwt.sign(tokenPayload, jwt_secret, { expiresIn: "30m" });
 
     const link = `https://localhost:8000/reset-password/${encodeURIComponent(
       IDEns
-    )}/${encodeURIComponent(token)}`;
+    )}/${encodeURIComponent(token)}`;*/
 
-    await sendPasswordResetEmail(resultEmail, link);
+    await sendPasswordResetEmail(email, OTP);
 
-    res.status(200).json({ message: "Password reset email sent successfully" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Password reset email sent successfully",
+      });
   } catch (error) {
+    console.log("error is hapeening in catch");
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-async function sendPasswordResetEmail(email, link) {
+async function sendPasswordResetEmail(email, OTP) {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -127,7 +134,7 @@ async function sendPasswordResetEmail(email, link) {
       from: "tayebkahia4@gmail.com",
       to: email,
       subject: "Password Reset",
-      text: `Click the following link to reset your password: ${link}`,
+      text: `Click the following link to reset your password: ${OTP}`,
     };
 
     await transporter.sendMail(mailOptions);
