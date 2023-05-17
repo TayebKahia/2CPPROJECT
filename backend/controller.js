@@ -89,32 +89,20 @@ exports.ForgotPassword = async (req, res) => {
     const { email, OTP } = req.body;
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
-    console.log(email,OTP)
-    const result = await db.query(sql, values);
-
+    const result = await dbQuery(sql, values);
+console.log(result);
     if (result.length === 0) {
       console.log("error happen in length");
       return res.status(401).json({ success: false, error: "Invalid email" });
     }
-    console.log('the length is '+result.length);
-    /*const { IDEns, email: resultEmail } = result[0]; // Destructure IDEns and rename email to resultEmail
-    const tokenPayload = { IDEns, email: resultEmail };
-    const token = jwt.sign(tokenPayload, jwt_secret, { expiresIn: "30m" });
-
-    const link = `https://localhost:8000/reset-password/${encodeURIComponent(
-      IDEns
-    )}/${encodeURIComponent(token)}`;*/
 
     await sendPasswordResetEmail(email, OTP);
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Password reset email sent successfully",
-      });
+    res.status(200).json({
+      success: true,
+      message: "Password reset email sent successfully",
+    });
   } catch (error) {
-    console.log("error is hapeening in catch");
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -126,7 +114,7 @@ async function sendPasswordResetEmail(email, OTP) {
       service: "gmail",
       auth: {
         user: "tayebkahia4@gmail.com",
-        pass: "nodemailer2023",
+        pass: "lpybqougcvfmfznl",
       },
     });
 
