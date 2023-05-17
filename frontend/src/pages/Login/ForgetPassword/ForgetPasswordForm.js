@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";

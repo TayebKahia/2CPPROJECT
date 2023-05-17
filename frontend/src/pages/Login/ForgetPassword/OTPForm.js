@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+
 import React, { useState, useRef } from "react";
 import "./OTPForm.css";
 import { useNavigate } from "react-router-dom";
