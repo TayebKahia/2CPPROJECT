@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
 
@@ -14,19 +15,26 @@ const ForgetPasswordForm = () => {
   function handleSubmit(event) {
     event.preventDefault();
     if (emailIsValid) {
+      const OTP = Math.floor(Math.random() * 9000 + 1000);
+      sessionStorage.setItem("OTP", OTP);
       fetch("http://127.0.0.1:8000/forgot-password", {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, OTP: OTP }),
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data.message);
+          console.log(email + " " + OTP + " send");
+          if (data.success) {
+            navigate("/OTPage");
+          }
         })
-        .catch((err) => console.log(email + "not sent"));
+        .catch((err) =>
+          console.log(console.log(email + " " + OTP + "not  send"))
+        );
     }
   }
 

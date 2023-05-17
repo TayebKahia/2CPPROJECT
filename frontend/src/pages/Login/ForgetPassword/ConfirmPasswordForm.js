@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import "./ConfirmPasswordForm.css";
 import React, { useState } from "react";
 
@@ -16,7 +17,7 @@ const ConfirmPasswordForm = () => {
     event.preventDefault();
     if (password === passwordConfirm) {
       fetch("http://127.0.0.1:8000/forgot-password", {
-        method: "POST",
+        method: "PATCH",
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -25,7 +26,10 @@ const ConfirmPasswordForm = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(password + " sent");
+          if (data.success) {
+            navigate("/login");
+            console.log(password + " sent");
+          }
         })
         .catch((err) => console.log(password + " failed"));
     }

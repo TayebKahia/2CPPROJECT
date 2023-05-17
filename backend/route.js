@@ -14,6 +14,7 @@ router
 router
 .route('/forgot-password')
 .post(controller.ForgotPassword)
+.patch()
 
 module.exports =router;
 // dont forget to clear window.location storage
