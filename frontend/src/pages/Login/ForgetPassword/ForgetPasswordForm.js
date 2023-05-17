@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = React.useState(false);
   const [emailError, setEmailError] = React.useState();
+  const navigate = useNavigate();
 
   function handleChange(event) {
     setEmail(event.target.value);
@@ -28,6 +30,7 @@ const ForgetPasswordForm = () => {
         .then((res) => res.json())
         .then((data) => {
           console.log(email + " " + OTP + " send");
+          console.log(data);
           if (data.success) {
             console.log(data.success);
             navigate("/OTPage");
