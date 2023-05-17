@@ -1,11 +1,12 @@
 /* eslint-disable no-undef */
 import "./ConfirmPasswordForm.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ConfirmPasswordForm = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-
+  const navigate = useNavigate();
   function handleChangePassword(event) {
     setPassword(event.target.value);
   }
@@ -28,10 +29,14 @@ const ConfirmPasswordForm = () => {
         .then((data) => {
           if (data.success) {
             navigate("/login");
-            console.log(password + " sent");
+            console.log(password + " has changed");
+          } else {
+            console.log(password + " password doesn't changed");
           }
         })
-        .catch((err) => console.log(password + " failed"));
+        .catch((err) =>
+          console.log(password + " failed in the catch statement")
+        );
     }
   }
 
@@ -45,7 +50,7 @@ const ConfirmPasswordForm = () => {
           required
         ></input>
       </div>
-      <div class="input-container">
+      <div className="input-container">
         <input
           placeholder="Confirm password"
           onChange={handleChangePasswordConfirm}

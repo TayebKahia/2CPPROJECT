@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const ForgetPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = React.useState(false);
   const [emailError, setEmailError] = React.useState();
-
+  const navigate = useNavigate();
   function handleChange(event) {
     setEmail(event.target.value);
     validateField(email);
@@ -30,14 +30,14 @@ const ForgetPasswordForm = () => {
           console.log(email + " " + OTP + " send");
           if (data.success) {
             console.log(data.success);
-            navigate("/OTPage");
             console.log("success and email exist");
+            navigate("/OTPage");
           } else {
-            console.log("email not found");
+            console.log("data not success");
           }
         })
         .catch((err) =>
-          console.log(console.log(email + " " + OTP + "not  send"))
+          console.log(console.log(email + " " + OTP + "not  send in the catch"))
         );
     }
   }
