@@ -33,7 +33,7 @@ function LoginPage(props) {
           <span
             className="login-text forget-password"
             onClick={() => {
-              navigate("/UsersTable");
+              navigate("/ForgotPassword");
             }}
           >
             FORGET YOUR PASSWORD ?
