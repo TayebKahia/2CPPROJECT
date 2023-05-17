@@ -5,10 +5,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import LoginPage from "./pages/Login/LoginPage";
 import Tables from "./pages/Tables/Tables";
-import ForgetPasswordPage  from "./pages/Login/ForgetPassword/ForgetPasswordPage.js";
+import ForgetPasswordPage from "./pages/Login/ForgetPassword/ForgetPasswordPage.js";
 import Settings from "./pages/settings/Settings";
 import ConfirmPasswordPage from "./pages/Login/ForgetPassword/ConfirmPasswordPage";
 import OTPage from "./pages/Login/ForgetPassword/OTPage";
+import { UsersPage } from "./pages/settings/UsersSettings/UsersPage";
 function App() {
   const [role, setRole] = React.useState(sessionStorage.getItem("role") || "");
   console.log("hello mother fucker?");
@@ -67,7 +68,9 @@ function App() {
             <Route path="/ForgetPassword" element={<ForgetPasswordPage />} />
             <Route path="/OTPage" element={<OTPage />} />
             <Route path="/ConfirmPassword" element={<ConfirmPasswordPage />} />
+            <Route path="/UsersTable" element={<UsersPage />} />
           </Route>
+
           <Route
             path="/settings"
             element={
