@@ -28,8 +28,8 @@ const ConfirmPasswordForm = () => {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            navigate("/login");
             console.log(password + " has changed");
+            navigate("/login");
           } else {
             console.log(password + " password doesn't changed");
           }
