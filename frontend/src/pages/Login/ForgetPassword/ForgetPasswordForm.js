@@ -29,6 +29,7 @@ const ForgetPasswordForm = () => {
         .then((data) => {
           console.log(email + " " + OTP + " send");
           if (data.success) {
+            console.log(data.success);
             navigate("/OTPage");
           }
         })
