@@ -30,6 +30,9 @@ const ForgetPasswordForm = () => {
           console.log(email + " " + OTP + " send");
           if (data.success) {
             navigate("/OTPage");
+            console.log("success and email exist");
+          } else {
+            console.log("email not found");
           }
         })
         .catch((err) =>

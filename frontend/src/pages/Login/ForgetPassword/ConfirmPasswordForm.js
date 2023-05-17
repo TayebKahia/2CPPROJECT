@@ -36,9 +36,9 @@ const ConfirmPasswordForm = () => {
   }
 
   return (
-    <form class="form" onSubmit={handleSubmit}>
-      <p class="form-title">Reset password</p>
-      <div class="input-container">
+    <form className="form" onSubmit={handleSubmit}>
+      <p className="form-title">Reset password</p>
+      <div className="input-container">
         <input
           placeholder="Enter password"
           onChange={handleChangePassword}
@@ -59,7 +59,7 @@ const ConfirmPasswordForm = () => {
       ) : (
         <div className="error"></div>
       )}
-      <button class="submit" type="submit">
+      <button className="submit" type="submit">
         reset password
       </button>
     </form>
