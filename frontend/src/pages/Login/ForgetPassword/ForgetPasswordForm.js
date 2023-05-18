@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = React.useState(false);
   const [emailError, setEmailError] = React.useState();
+  const navigate = useNavigate();
 
   function handleChange(event) {
     setEmail(event.target.value);
@@ -16,7 +18,7 @@ const ForgetPasswordForm = () => {
     event.preventDefault();
     if (emailIsValid) {
       const OTP = Math.floor(Math.random() * 9000 + 1000);
-      sessionStorage.setItem("OTP", OTP);
+      
       fetch("http://127.0.0.1:8000/forgot-password", {
         method: "POST",
         headers: {
@@ -27,9 +29,10 @@ const ForgetPasswordForm = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(email + " " + OTP + " send");
+          
           if (data.success) {
-            console.log(data.success);
+            sessionStorage.setItem("OTP", OTP);
+            sessionStorage.setItem("IDEns",data.IDEns);
             navigate("/OTPage");
             console.log("success and email exist");
           } else {

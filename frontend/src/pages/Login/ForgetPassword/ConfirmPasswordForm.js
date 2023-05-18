@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 import "./ConfirmPasswordForm.css";
 import React, { useState } from "react";
-
-const ConfirmPasswordForm = () => {
+import { useNavigate } from "react-router-dom";
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const navigate=useNavigate();
+function ConfirmPasswordForm() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
@@ -16,19 +18,22 @@ const ConfirmPasswordForm = () => {
   function handleSubmit(event) {
     event.preventDefault();
     if (password === passwordConfirm) {
+      const IDEns = sessionStorage.getItem("IDEns");
       fetch("http://127.0.0.1:8000/forgot-password", {
         method: "PATCH",
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ password: password }),
+        body: JSON.stringify({ password: password, IDEns: IDEns }),
       })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            navigate("/login");
+          console.log(data);
             console.log(password + " sent");
+            sessionStorage.clear();
+            navigate("/login");
           }
         })
         .catch((err) => console.log(password + " failed"));
@@ -64,6 +69,6 @@ const ConfirmPasswordForm = () => {
       </button>
     </form>
   );
-};
+}
 
 export default ConfirmPasswordForm;
