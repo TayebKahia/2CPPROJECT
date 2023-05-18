@@ -24,9 +24,10 @@ function OTPForm() {
     }
   };
   function hadleSubmit() {
-    if (sessionStorage.getItem("OTP") === parseInt(otp.join(""))) {
+
+    if (sessionStorage.getItem("OTP") === otp.join("")) {
       
-      Navigate("/ConfirmPassword");
+      navigate("/ConfirmPassword");
     }
   }
 
