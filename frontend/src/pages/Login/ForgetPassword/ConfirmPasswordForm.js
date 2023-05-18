@@ -2,14 +2,8 @@
 import "./ConfirmPasswordForm.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 
 const ConfirmPasswordForm = () => {
-=======
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const navigate=useNavigate();
-function ConfirmPasswordForm() {
->>>>>>> master
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const navigate = useNavigate();
@@ -35,17 +29,14 @@ function ConfirmPasswordForm() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-<<<<<<< HEAD
             console.log(password + " has changed");
+
             navigate("/login");
           } else {
             console.log(password + " password doesn't changed");
-=======
-          console.log(data);
+
             console.log(password + " sent");
             sessionStorage.clear();
-            navigate("/login");
->>>>>>> master
           }
         })
         .catch((err) =>
@@ -83,6 +74,6 @@ function ConfirmPasswordForm() {
       </button>
     </form>
   );
-}
+};
 
 export default ConfirmPasswordForm;
