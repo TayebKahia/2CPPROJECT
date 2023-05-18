@@ -58,21 +58,6 @@ function Login (props){
                     }
                 })
                 .catch(err=>console.log(err))
-            
-            
-            // for(let i=0 ; i<accountsData.length ; i++){
-            //     if(formData.email=== accountsData[i].email){
-            //         if(formData.password === accountsData[i].password){
-            //             props.setRole(accountsData[i].role)
-            //             sessionStorage.setItem("role",accountsData[i].role)
-                        
-
-            //             navigate("/tables")
-            //             break;
-            //         }
-            //     }
-            // }
-
         }
     }
 

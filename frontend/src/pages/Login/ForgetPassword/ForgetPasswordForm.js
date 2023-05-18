@@ -1,11 +1,19 @@
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 const ForgetPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = React.useState(false);
   const [emailError, setEmailError] = React.useState();
   const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
   function handleChange(event) {
     setEmail(event.target.value);
     validateField(email);
@@ -15,7 +23,7 @@ const ForgetPasswordForm = () => {
     event.preventDefault();
     if (emailIsValid) {
       const OTP = Math.floor(Math.random() * 9000 + 1000);
-      sessionStorage.setItem("OTP", OTP);
+      
       fetch("http://127.0.0.1:8000/forgot-password", {
         method: "POST",
         headers: {
@@ -26,9 +34,15 @@ const ForgetPasswordForm = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(email + " " + OTP + " send");
+          
           if (data.success) {
+<<<<<<< HEAD
             console.log(data.success);
+=======
+            sessionStorage.setItem("OTP", OTP);
+            sessionStorage.setItem("IDEns",data.IDEns);
+            navigate("/OTPage");
+>>>>>>> master
             console.log("success and email exist");
             navigate("/OTPage");
           } else {
