@@ -15,7 +15,6 @@ const ForgetPasswordForm = () => {
     event.preventDefault();
     if (emailIsValid) {
       const OTP = Math.floor(Math.random() * 9000 + 1000);
-      sessionStorage.setItem("OTP", OTP);
       fetch("http://127.0.0.1:8000/forgot-password", {
         method: "POST",
         headers: {
@@ -26,17 +25,15 @@ const ForgetPasswordForm = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(email + " " + OTP + " send");
           if (data.success) {
-            console.log(data.success);
-            console.log("success and email exist");
+            sessionStorage.setItem("OTP", OTP);
+            sessionStorage.setItem("IDEns",data.IDEns);
             navigate("/OTPage");
-          } else {
-            console.log("data not success");
+         
           }
         })
         .catch((err) =>
-          console.log(console.log(email + " " + OTP + "not  send in the catch"))
+          console.log(err)
         );
     }
   }
