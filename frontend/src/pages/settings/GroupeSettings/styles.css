@@ -1,0 +1,13 @@
+.group-settings-container{
+    display: flex;
+    align-items: center;
+    flex-direction:column ;
+    justify-content: center;
+    gap:50px;
+}
+
+.group-select{
+    width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+}

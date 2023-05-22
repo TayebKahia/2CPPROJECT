@@ -1,16 +1,17 @@
 import React from "react";
-import feedback from "../assets/imgs/feedback.png"
 
-function FooterCard(){
+function FooterCard(props){
     return(
         <div className="footer-card-container">
+            
             <div className="card-icon">
-                <img src={feedback} alt="" />
+                <img src={props.img} alt="" />
             </div>
 
             <div className="footer-link">
-                <span>Give us your feedback !</span>
+                <span>{props.text}</span>
             </div>
+
         </div>
     )
 }

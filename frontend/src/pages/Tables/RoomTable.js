@@ -3,6 +3,7 @@ import { useTable , useRow } from "react-table";
 import RoomData from "../../data/RoomData.json"
 import { Columns } from "../../data/Columns";
 // import {data as dataj} from "../../data/data.json"
+import { server } from "../../data/server";
 import "./styles.css"
 
 
@@ -11,7 +12,7 @@ function RoomTable(props){
     const [roomData,setRoomData] = React.useState([])
     
     React.useEffect(()=>{
-        fetch("http://127.0.0.1:8000/roomTable",{
+        fetch(`${server}/roomTable`,{
             method:"POST",
             headers:{"Accept":"application/json","content-type":"application/json"},
             body:JSON.stringify({jour:"DIM"})
@@ -22,19 +23,7 @@ function RoomTable(props){
     },[])
 
     const columns = React.useMemo(()=> Columns )
-    const data = React.useMemo(()=>roomData , [roomData])
-
-    let date = new Date("2023-5-15")
-    console.log(date.getDay())
-    switch(date.getDay()){
-        case 0 : 
-            console.log("Sunday")
-            break;
-        default:
-            console.log("monday")
-            break;
-    }
-
+    const data = React.useMemo(()=>RoomData , [RoomData])
 
     const tableInstance = useTable({
         columns,
@@ -82,6 +71,9 @@ function RoomTable(props){
         <>
 
             <div className={`room-table-container ${props.className}`}>
+                <select className="room-select">
+                    <option value="every-room">every room</option>
+                </select>
                 <table {...getTableProps()}>
                     <thead>
                         {headersGroupElements}    

@@ -14,7 +14,7 @@ function TableDescription (props){
                 </span>
             </div>
             <div className="table-pic" >
-                <img src="" alt="" />
+                <img src={props.img} alt="Img" />
             </div>
         </div>
     )

@@ -8,6 +8,10 @@ export const GroupColumns =[
         accessor:"Nom"
     },
     {
+        Header:`Chapitre`,
+        accessor:"chapitre"
+    },
+    {
         Header:"Etat d'avancement",
         accessor:"etatDavancement"
     }

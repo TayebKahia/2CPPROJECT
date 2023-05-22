@@ -1,32 +1,32 @@
 import React from "react";
-// import { Columns } from "../../../data/settingsColumn";
 import "./styles.css"
 import {dataColumns} from "../../../data/dataColumns"
-// import  settingsData  from "../../../data/settingsData.json"
 import { useTable } from "react-table";
-
+import { server } from "../../../data/server";
 
 function TableSettings(props){
-
-    const [settingsData,setSettingsData]= React.useState([])
-
-    React.useEffect(()=>{
-        fetch("http://127.0.0.1:8000/settings")
-        .then(res=>res.json())
-        .then(data=>{
-            setSettingsData(data)
-            
-        })
-        .catch(err=>console.log(err))
-    },[props.selectedInfo])
+    
+    // const memo = React.useMemo()
 
     const columns = React.useMemo(()=> dataColumns )
-    const data = React.useMemo(()=>settingsData , [settingsData])
+    const data = React.useMemo(()=>props.settingsData , [props.settingsData])
+    
+
+    React.useEffect(()=>{
+        fetch(`${server}/settingsTable`,{
+            method:"POST",
+            headers:{"Accept": "application/json","Content-type": "application/json"},
+            body:JSON.stringify({year:props.selectedYear,day:props.selectedDay})})
+            .then(res=>res.json())
+            .then(data=>{props.setSettingsData(data)})
+            .catch(err=>console.log(err))
+            
+    },[]);
+
 
 
     const handleRowClick = (row) => {
         console.log('Clicked row data:', row.original);
-        props.setSelectedYear(row.original.year)
         props.setSelectedInfo(prevSelectedInfo => ({...prevSelectedInfo,
             year:row.original.year,
             day:row.original.day,

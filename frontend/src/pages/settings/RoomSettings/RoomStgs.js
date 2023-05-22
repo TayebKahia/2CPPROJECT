@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import "./styles.css"
+import { server } from "../../../data/server";
+import Notif from "../../../components/Notif";
+
 
 function RoomStgs(props){
     
@@ -16,13 +19,25 @@ function RoomStgs(props){
         
         
         function handleDay(e){
+            
             props.setSelectedInfo(prevInfo => ({...prevInfo,day:e.target.value}))
         }
 
 
-        function handleYear(e){
-            props.setSelectedYear(e.target.value)
+        function handleYear(e){  
             props.setSelectedInfo(prevInfo => ({...prevInfo,year:e.target.value}))
+            fetch(`${server}/settings`,{
+                method:"POST",
+                headers:{"Accept": "application/json","Content-type": "application/json"},
+                body:JSON.stringify({year:props.selectedInfo.year})})
+                .then(res=>res.json())
+                .then(data=>{
+                    setGroups(data.groups)
+                    setModules(data.modules)
+                    setRooms(data.rooms)
+                    setHours(data.hours)
+                })
+                .catch(err=>console.log(err))
         }
 
 
@@ -48,21 +63,19 @@ function RoomStgs(props){
         }
 
         useEffect(()=>{
-           
-            fetch("http://127.0.0.1:8000/settings",{
+            fetch(`${server}/settings`,{
             method:"POST",
             headers:{"Accept": "application/json","Content-type": "application/json"},
-            body:JSON.stringify({year:props.selectedYear})})
+            body:JSON.stringify({year:props.selectedInfo.year})})
             .then(res=>res.json())
             .then(data=>{
                 setGroups(data.groups)
                 setModules(data.modules)
                 setRooms(data.rooms)
                 setHours(data.hours)
-                props.setSelectedInfo(prevInfo =>({...prevInfo,group:data.groups[0],salle:data.rooms[0],hours:data.hours[0],module:data.modules[0]}))
             })
             .catch(err=>console.log(err))
-        },[props.selectedYear])
+        },[])
 
 
         const groupElements = groups.map(group=>{
@@ -89,41 +102,94 @@ function RoomStgs(props){
 
         function handleUpdate(e){
             e.preventDefault()
-            console.log("info")
-            console.log(props.selectedInfo)
             const{day,year,hour,salle,module,teacher,group,type} = props.selectedInfo
-            fetch("http://127.0.0.1:8000/test",{
+            props.setSelectedDay(day)
+            props.setSelectedYear(year)
+            fetch(`${server}/test`,{
                 method:"PUT",
                 headers:{"Accept": "application/json","Content-type": "application/json"},
                 body:JSON.stringify({infos:props.selectedInfo})})
                 .then(response =>response.json())
                 .then(data => console.log(data))
-                props.setSelectedInfo(prevSelectedInfo => ({...prevSelectedInfo}))
+                .catch(err => console.log(err))
+                // props.setSelectedInfo(prevSelectedInfo => ({...prevSelectedInfo}))
+
+            fetch(`${server}/settingsTable`,{
+                method:"POST",
+                headers:{"Accept": "application/json","Content-type": "application/json"},
+                body:JSON.stringify({year:props.selectedYear,day:props.selectedDay})})
+                .then(res=>res.json())
+                .then(data=>{props.setSettingsData(data)})
+                .catch(err=>console.log(err))
         }
-       
+
         function handleRemove(e){
             e.preventDefault()
-            console.log("removed")
+            fetch(`${server}/settingsTable`,{
+                method:"DELETE",
+                headers:{"Accept": "application/json","Content-type": "application/json"},
+                body:JSON.stringify({IDSeance:props.selectedInfo.IDSeance})})
+                .catch(err=>console.log(err))
+
+            fetch(`${server}/settingsTable`,{
+                method:"POST",
+                headers:{"Accept": "application/json","Content-type": "application/json"},
+                body:JSON.stringify({year:props.selectedYear,day:props.selectedDay})})
+                .then(res=>res.json())
+                .then(data=>{props.setSettingsData(data)})
+                .catch(err=>console.log(err))
+        }
+
+
+        function handleRemoveAll(e){
+            e.preventDefault()
+            // fetch(`${server}/settingsTable`,{
+            //     method:"DELETE",
+            //     headers:{"Accept": "application/json","Content-type": "application/json"},
+            //     body:JSON.stringify({IDSeance:props.selectedInfo.IDSeance})})
+            //     .catch(err=>console.log(err))
+
+            // fetch(`${server}/settingsTable`,{
+            //     method:"POST",
+            //     headers:{"Accept": "application/json","Content-type": "application/json"},
+            //     body:JSON.stringify({year:props.selectedYear,day:props.selectedDay})})
+            //     .then(res=>res.json())
+            //     .then(data=>{props.setSettingsData(data)})
+            //     .catch(err=>console.log(err))
         }
     
+
+        function handleAdd(e){
+            e.preventDefault()
+            fetch(`${server}/test`,{
+                method:"POST",
+                headers:{"Accept": "application/json","Content-type": "application/json"},
+                body:JSON.stringify({Info:props.selectedInfo})})
+                .catch(err=>console.log(err))
+
+
+                fetch(`${server}/settingsTable`,{
+                    method:"POST",
+                    headers:{"Accept": "application/json","Content-type": "application/json"},
+                    body:JSON.stringify({year:props.selectedYear,day:props.selectedDay})})
+                    .then(res=>res.json())
+                    .then(data=>{props.setSettingsData(data)})
+                    .catch(err=>console.log(err))
+        }
 
     
     return(
-        <div className="room-settings-container">
-            <form className="room-settings">
-                
-                {/* <select>
-                {props.dates.map((date)=>{
-                    return <option>{date}</option>
-                })}
-                </select> */}
+        <div className="room-settings-container lft-mrg">
 
-                <select value={props.selectedInfo.day.toLowerCase()} className="selection day" onChange={handleDay} >
-                    <option value="sunday">sunday</option>
-                    <option value="monday">monday</option>
-                    <option value="tuesday">tuesday</option>
-                    <option value="wednesday">wednesday</option>
-                    <option value="thursday">thursday</option>
+            
+            <form className="room-settings">
+
+                <select value={props.selectedInfo.day} className="selection day" onChange={handleDay} >
+                    <option value="DIM">DIMANCHE</option>
+                    <option value="LUN">lUNDI</option>
+                    <option value="MAR">MARDI</option>
+                    <option value="MER">MERCREDI</option>
+                    <option value="JEU">JEUDI</option>
                 </select>
 
 
@@ -141,7 +207,7 @@ function RoomStgs(props){
                 </select>
 
                 <select value={props.selectedInfo.type} className="selection type" onChange={handleType}>
-                    <option value="cour">Cour</option>
+                    <option value="CC">CC</option>
                     <option value="TD">TD</option>
                     <option value="TP">TP</option>
                 </select>
@@ -160,9 +226,11 @@ function RoomStgs(props){
                 
 
 
+                <button onClick={handleAdd} className="settings-button" type="">Add</button>
                 <button onClick={handleUpdate} className="settings-button" type="">Update</button>
                 <button onClick={handleRemove} className="settings-button" type="">Remove</button>
-                <button onClick={handleUpdate} className="settings-button" type="">add</button>
+                <button onClick={handleRemoveAll} className="settings-button" type="">Remove All</button>
+
             </form>
         </div>
     )

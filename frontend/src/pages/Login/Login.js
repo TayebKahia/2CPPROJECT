@@ -1,7 +1,7 @@
 import React from "react";
 import accounts from "../../data/accountsData"
 import { Link , useNavigate} from "react-router-dom";
-
+import { server } from "../../data/server";
 
 function Login (props){
 
@@ -21,9 +21,6 @@ function Login (props){
 
     const [accountsData,setEmailData] = React.useState(accounts.data.accounts)
 
-    const [message,setMessage] = React.useState(false)
-
-    const [role,setRole] = React.useState("")
 
     function handleChange(event){
         const {name,value} = event.target
@@ -43,21 +40,37 @@ function Login (props){
         setIsSubmitting(true)
         
         if(formIsValid){
-            fetch("http://127.0.0.1:8000/login",{
-                method:"POST",
-                headers:{"Accept": "application/json","Content-type": "application/json"},
-                body:JSON.stringify({email:formData.email,password:formData.password})})
-                .then(res=>res.json())
-                .then(data=>{
-                    setRole(data.role)
-                    if(data.success){
-                        props.setRole(data.role)
-                        sessionStorage.setItem("role",data.role)
-                        localStorage.setItem("table","Time Table")
+            // fetch(`${server}`,{
+            //     method:"POST",
+            //     headers:{"Accept": "application/json","Content-type": "application/json"},
+            //     body:JSON.stringify({email:formData.email,password:formData.password})})
+            //     .then(res=>res.json())
+            //     .then(data=>{
+            //         setRole(data.role)
+            //         if(data.success){
+            //             console.log(data.IDEns)
+            //             props.setRole(data.role)
+            //             sessionStorage.setItem("role",data.role)
+            //             localStorage.setItem("table","Time Table")
+            //             navigate("/tables")
+            //         }
+            //     })
+            //     .catch(err=>console.log(err))
+            
+            
+            for(let i=0 ; i<accountsData.length ; i++){
+                if(formData.email=== accountsData[i].email){
+                    if(formData.password === accountsData[i].password){
+                        props.setRole(accountsData[i].role)
+                        sessionStorage.setItem("role",accountsData[i].role)
+                        
+
                         navigate("/tables")
+                        break;
                     }
-                })
-                .catch(err=>console.log(err))
+                }
+            }
+
         }
     }
 
@@ -83,6 +96,9 @@ function Login (props){
         setFormErrors(errors);
         setFormIsValid(Object.values(errors).every((err) => err === ''));
     }
+
+    
+
 
     return (
         <div className="form-wrapper">

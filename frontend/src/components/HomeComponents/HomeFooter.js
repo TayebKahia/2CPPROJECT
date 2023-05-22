@@ -2,6 +2,9 @@ import React from "react";
 import {BsFacebook,BsLinkedin} from "react-icons/bs";
 import "../../pages/Home/styles.css"
 import FooterCard from "../FooterCard";
+import contactUs from "../../assets/imgs/ContactUs.png"
+import feedBack from "../../assets/imgs/feedback.png"
+
 
 function HomeFooter (){
     return(
@@ -9,8 +12,8 @@ function HomeFooter (){
                 
 
                 <div className="cards">
-                    <FooterCard />
-                    <FooterCard />
+                    <FooterCard img={contactUs} text={"Contact US"} />
+                    <FooterCard img={feedBack} text={"Give us your feedback !"} />
                 </div>
 
                 <div className="rights">

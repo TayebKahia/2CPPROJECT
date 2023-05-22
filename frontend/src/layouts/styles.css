@@ -109,12 +109,13 @@ nav ul li:hover{
     text-decoration: none ;
     position: relative;
     cursor: pointer;
-    transition: 1s all;
+    transition: 0.1s all;
     
 }
 
 .logout:hover{
-    background-color: #4FACF7;
+    background-color: var(--secondary-color);
+    color:white;
 }
 
 

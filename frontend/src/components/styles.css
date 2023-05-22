@@ -55,5 +55,22 @@
     padding: 10px;
 }
 .permission:hover{
-    background-color: #4FACF7;
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+
+/* notif styling  */
+
+.notif{
+    position: fixed;
+    top:2rem;
+    width: 5rem;
+    padding: 0.5rem;
+    background-color: red;
+    height: 20px;
+    opacity: .8;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
 }

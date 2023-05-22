@@ -1,12 +1,6 @@
 .room-settings-container{
-    height: 100%;
-    width: 25vw;
-    /* background-color: red; */
-    margin-left:15vw ;
     display: flex;
     align-items: center;
-    position: fixed;
-    top: 0;
 }
 
 .room-settings{
@@ -44,20 +38,23 @@ label select {
 .settings-button{
     padding: 10px;
     font-size: 18px;
-    background-color: #181B3A;
+    background-color: var(--main-color);
     border-radius: 10px;
     border: none;
     color:white;
     cursor: pointer;
 }
 
+.settings-button:hover{
+    background-color: var(--secondary-color);
+}
 
 
 
 .settings-case{
-    margin-left:40vw ;
+    margin-left:calc(5rem + 15vw);
     /* overflow: scroll; */
-    /* width: 60vw; */
+    width: calc(100vw - (5rem + 15vw) );
     padding: 10px;
     margin-top: 0;
 }
