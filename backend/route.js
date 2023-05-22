@@ -1,21 +1,38 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const controller=require('./controller')
+const controller = require("./controller");
 
 router
-.route('/User')
-.post(controller.createUser)
-.delete();
+  .route("/UserSettings")
+  .get(controller.getUser)
+  .post(controller.createUser)
+  .put(controller.updateUser)
+  .delete();
+
+router.route("/login").post(controller.loginUser);
 
 router
-.route('/login')
-.post(controller.loginUser);
+  .route("/forgot-password")
+  .post(controller.ForgotPassword)
+  .patch(controller.confirmPassword);
+
+router.route("/settings").post(controller.fillTable);
 
 router
-.route('/forgot-password')
-.post(controller.ForgotPassword)
-.patch(controller.confirmPassword)
+  .route("/settingsTable")
+  .post(controller.fillSettingsTable)
+  .delete(controller.deleteSettingsTable);
 
-module.exports =router;
+router.route("/roomTable").post(controller.uploadRoomTable);
+
+router.route("/tableGroupe").post(controller.uploadTableGroupe);
+
+router.route("/test").post(controller.updateTest).put(controller.postTest);
+
+router.route("/room").post(controller.uploadRoom);
+
+router.route("/timeTable").get(controller.getTimeTable);
+
+module.exports = router;
 // dont forget to clear window.location storage
 //  localStorage.clear();
