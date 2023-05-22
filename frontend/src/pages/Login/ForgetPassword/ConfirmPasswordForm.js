@@ -17,22 +17,37 @@ const ConfirmPasswordForm = () => {
   function handleSubmit(event) {
     event.preventDefault();
     if (password === passwordConfirm) {
+
       const IDEns=sessionStorage.getItem("IDEns");
+      
+
       fetch("http://127.0.0.1:8000/forgot-password", {
         method: "PATCH",
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
         },
+
         body: JSON.stringify({ password: password,IDEns:IDEns }),
+
+    
+
       })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
+
             sessionStorage.clear();
+
+            console.log(password + " has changed");
+
+
             navigate("/login");
           } else {
             console.log(password + " password doesn't changed");
+
+            console.log(password + " sent");
+            sessionStorage.clear();
           }
         })
         .catch((err) =>

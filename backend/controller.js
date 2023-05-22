@@ -90,7 +90,7 @@ exports.ForgotPassword = async (req, res) => {
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
     const result = await dbQuery(sql, values);
-console.log(result);
+    console.log(result);
     if (result.length === 0) {
       console.log("error happen in length");
       return res.status(401).json({ success: false, error: "Invalid email" });
@@ -177,7 +177,10 @@ exports.confirmPassword = async (req, res) => {
     }
     /*const secret = jwt_secret + password;
     const verify = jwt.verify(token, secret);*/
+
+
     const encryptedpassword = await bcrypt.hash(password, 10);
+    console.log(encryptedpassword)
     const sql = "UPDATE enseignants SET password =? WHERE IDEns =?";
     const values = [encryptedpassword, IDEns];
     const updated = await dbQuery(sql, values);
@@ -195,3 +198,7 @@ exports.confirmPassword = async (req, res) => {
   }
   
 };
+
+
+
+

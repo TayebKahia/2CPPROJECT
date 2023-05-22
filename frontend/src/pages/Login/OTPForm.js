@@ -24,7 +24,6 @@ function OTPForm() {
 
   return (
     <form className="form">
-   
       <div className="title">Verification Code</div>
       <p className="message">
         We have sent a verification code to your mobile number
@@ -41,13 +40,13 @@ function OTPForm() {
           />
         ))}
       </div>
-       
+
       <button>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span> verify me
-</button>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span> verify me
+      </button>
     </form>
   );
 }

@@ -3,9 +3,14 @@ import React, { useState, useRef } from "react";
 import "./OTPForm.css";
 import { useNavigate } from "react-router-dom";
 function OTPForm() {
+  // const [otp, setOTP] = useState(["", "", "", ""]);
   const [otp, setOTP] = useState(["", "", "", ""]);
   const inputs = useRef([]);
+<<<<<<< HEAD
   const navigate = useNavigate();
+=======
+  const navigate=useNavigate();
+>>>>>>> master
   const handleInputChange = (index, event) => {
     const newOTP = [...otp];
     newOTP[index] = event.target.value;
@@ -22,11 +27,18 @@ function OTPForm() {
       }
     }
   };
+<<<<<<< HEAD
   function hadleSubmit(event) {
     event.preventDefault();
     console.log(sessionStorage.getItem("OTP"), " : otp off session storage");
 
     if (sessionStorage.getItem("OTP") === otp.join("")) {
+=======
+  function hadleSubmit() {
+
+    if (sessionStorage.getItem("OTP") === otp.join("")) {
+      
+>>>>>>> master
       navigate("/ConfirmPassword");
     }
   }
