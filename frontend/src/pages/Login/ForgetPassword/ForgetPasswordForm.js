@@ -1,19 +1,15 @@
 import "./ForgetPasswordForm.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 const ForgetPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = React.useState(false);
   const [emailError, setEmailError] = React.useState();
   const navigate = useNavigate();
-<<<<<<< HEAD
-=======
 
->>>>>>> master
+
+
   function handleChange(event) {
     setEmail(event.target.value);
     validateField(email);
