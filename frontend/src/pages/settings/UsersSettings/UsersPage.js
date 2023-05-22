@@ -5,23 +5,41 @@ import UsersList from "../../../data/UsersList.json";
 import { Columns } from "../../../data/columnsUsers";
 
 export const UsersPage = () => {
+  const [usersData, setUsersData] = useState([]);
   const columns = useMemo(() => Columns, []);
-  const data = useMemo(() => UsersList, []);
+  const data = useMemo(() => usersData, []);
   const tableInstance = useTable({ columns, data });
   const [email, setEmail] = useState("");
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [role, setRole] = useState("");
+  const [id, setId] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     tableInstance;
+ 
+
+
+
+
+  React.useEffect(() => {
+    fetch("https://127.0.0.1:8000/Usersettings")
+      .then((res) => res.json())
+      .then((data) => {
+        setUsersData(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+
 
   function handleRowClick(row) {
     setSelectedRow(row);
     setNom(row.original.nom);
     setPrenom(row.original.prenom);
     setEmail(row.original.email);
-    setRole(row.original.role); // Update the role state based on selected row
+    setRole(row.original.role);
+    setId(row.original.id);
   }
   function handleNom(event) {
     setNom(event.target.value);
@@ -41,17 +59,51 @@ export const UsersPage = () => {
 
   function handleAdd(event) {
     event.preventDefault();
-    // Add logic to handle the add functionality
+    fetch("https://127.0.0.1:8000/Usersettings", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        nom: nom,
+        prenom: prenom,
+        email: email,
+        role: role,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          console.log(
+            { id: id, nom: nom, prenom: prenom, email: email, role: role } +
+              " has updated"
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("fetching error ");
+      });
+
+
+
+
+      fetch("https://127.0.0.1:8000/Usersettings")
+      .then((res) => res.json())
+      .then((data) => {
+        setUsersData(data);
+      })
+      .catch((err) => console.log(err));
   }
 
   function handleDelete(event) {
     event.preventDefault();
-    // Add logic to handle the delete functionality
   }
 
   function handleUpdate(event) {
     event.preventDefault();
-    // Add logic to handle the update functionality
   }
 
   return (

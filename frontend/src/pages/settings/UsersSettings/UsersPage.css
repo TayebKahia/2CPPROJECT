@@ -2,9 +2,10 @@ table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 70%;
-  padding-right: 10px;
+  margin-left: auto;
+  margin-right: 10px;
+  overflow-y: auto; /* Add scrollable overflow for the table */
 }
-
 table td,
 table th {
   border: 1px solid #ddd;
@@ -27,21 +28,22 @@ table th {
   color: white;
 }
 .main-container {
-  height: calc(1vh-110px);
+  height: calc(100vh - 110px);
   padding-top: 110px;
   display: flex;
-  flex-direction: row;
-  position: absolute;
-  justify-content: space-around;
-  width: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 .form-container {
-  width: 280px;
-  height: 400px;
+  width: 330px;
+  height: 480px;
   border-radius: 20px;
   padding: 5px;
   box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
   background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  position: fixed;
+  margin-left: 10px;
+  margin-right: auto;
 }
 form {
   background: rgb(5, 6, 45);
