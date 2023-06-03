@@ -124,7 +124,7 @@ exports.createUser = async (req, res) => {
   const { Nom, email, password, role } = req.body;
   console.log(req.body);
   try {
-    const emailExists = await checkExist(email,"enseignants","email");
+    const emailExists = await checkExists(email,"enseignants","email");
     if (emailExists) {
       return res.status(409).json({ error: "Email already exists" });
     } else {
@@ -317,7 +317,7 @@ exports.getSettings = async (req, res) => {
 
 exports.getSettingsTable = async (req, res) => {
   const { year, day } = req.query;
-  const sql = `SELECT IDSeance, codeClasse AS 'year', jour AS day, heure AS hour, codeType AS type, codeSalle AS salle, CodeMod AS module, enseignants. Nom AS teacher, NumGroupe AS 'group' FROM seances
+  const sql = `SELECT IDSeance,seances.IDEns , codeClasse AS 'year', jour AS day, heure AS hour, codeType AS type, codeSalle AS salle, CodeMod AS module, enseignants.Nom AS teacher, NumGroupe AS 'group' FROM seances
      JOIN enseignants ON seances.IDEns = enseignants.IDEns
     WHERE jour = ? AND codeClasse = ?
     ORDER BY NumGroupe`;
@@ -532,8 +532,31 @@ exports.addRoom = async (req, res) => {
   }
 };
 
-exports.getChapters = async (req, res) => { 
-  
+exports.getChapters = async (req, res) => {
+  const {module,chapitre}=req.query
+  console.log(chapitre)
+  if (!chapitre){
+    try {
+      let data = await dbQuery(`SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
+      `,module)
+      const chapter = data.map((result) => result.chapter);
+      res.json({chapter})
+    } catch(err){
+      console.log(err)
+      res.json({message:err})
+    }}
+    else if (chapitre){
+      try {
+        data = await dbQuery(`SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,[module,chapitre])
+        const sousChapitre = data.map((result) => result.sousChapitre)
+        console.log(chapitre)
+        console.log(sousChapitre)
+        res.json({sousChapitre})
+      }catch(err){
+        console.log(err)
+        res.json({message:err})
+      }
+}
 };
 
 exports.getGroupTableSettings = async (req, res) => {
@@ -541,12 +564,13 @@ exports.getGroupTableSettings = async (req, res) => {
   const IDEns = req.query.IDEns;
   const IDProf = parseInt(IDEns);
   console.log(IDProf);
-  sql = `SELECT COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+  sql = `SELECT COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
   FROM seances
   JOIN enseignants ON seances.IDEns = enseignants.IDEns
   WHERE seances.IDEns =?`;
   try {
     const data = await dbQuery(sql, IDProf);
+    console.log(data)
     res.json(data);
   } catch (err) {
     res.json({ message: err });
