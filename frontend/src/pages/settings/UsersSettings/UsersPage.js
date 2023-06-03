@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import "./UsersPage.css";
 import { useTable } from "react-table";
-import UsersList from "../../../data/UsersList.json";
+
 import { Columns } from "../../../data/columnsUsers";
 
 export const UsersPage = () => {

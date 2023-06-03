@@ -7,7 +7,7 @@ router
   .get(controller.getUser)
   .post(controller.createUser)
   .put(controller.updateUser)
-  .delete();
+  .delete(controller.deleteUser);
 
 router.route("/login").post(controller.loginUser);
 

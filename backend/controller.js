@@ -27,7 +27,6 @@ function checkEmailExists(email) {
 exports.getUser = async (req, res) => {
   const sql = "SELECT * FROM enseignants "; // enseignants hold all users infos such as emaill pass etc..
   const result = await dbQuery(sql);
-  console.log(result);
   res.json(result);
 };
 
@@ -36,8 +35,11 @@ exports.updateUser = async (req, res) => {
   SET Nom = ?, email =?, role=?
   WHERE IDEns=?`;
   const { IDEns, Nom, email, role } = req.body;
+  console.log(req.body);
+
   const values = [Nom, email, role, parseInt(IDEns)];
   const result = await dbQuery(sql, values);
+
   res.json(result);
 };
 exports.createUser = async (req, res) => {
@@ -48,7 +50,7 @@ exports.createUser = async (req, res) => {
     if (emailExists) {
       return res.status(409).json({ error: "Email already exists" });
     } else {
-      const encryptedpassword = await bcrypt.hash(password,10);
+      const encryptedpassword = await bcrypt.hash(password, 10);
       const sql =
         "INSERT INTO enseignants (Nom, email, password, role) VALUES (?)";
       const values = [Nom, email, encryptedpassword, role];
@@ -63,6 +65,12 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.deleteUser = async (req, res) => {
+  sql = "DELETE FROM enseignants WHERE IDEns=?";
+  const { IDEns } = req.body;
+  const result = await dbQuery(sql, [IDEns]);
+  res.json({ message: "User deleted successfully" });
+};
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
