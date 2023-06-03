@@ -58,3 +58,16 @@ tbody td:hover:before {
     width:100vw;
 }
 
+<<<<<<< Updated upstream
+=======
+.room-select{
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.room-sett{
+    display: flex;
+    gap:20px;
+}
+>>>>>>> Stashed changes

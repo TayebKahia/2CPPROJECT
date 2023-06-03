@@ -1,20 +1,25 @@
-export const GroupColumns =[
+export const GroupSettHeaders =[
     {
         Header:`Module`,
         accessor:"CodeMod"
+    },
+    {
+        Header:`Annee`,
+        accessor:`codeClasse`
+    },
+    {
+        Header:"Groupe",
+        accessor:"Group"
     },
     {
         Header:`Enseignant`,
         accessor:"Nom"
     },
     {
-<<<<<<< Updated upstream
-=======
         Header:`Chapitre`,
         accessor:"Chapitre"
     },
     {
->>>>>>> Stashed changes
         Header:"Etat d'avancement",
         accessor:"etatDavancement"
     }

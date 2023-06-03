@@ -1,0 +1,20 @@
+.group-settings-container{
+    display: flex;
+    align-items: center;
+    flex-direction:column ;
+    justify-content: center;
+    gap:50px;
+}
+
+.group-select{
+    width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.grp-sett-table{
+    margin-left:40vw ;
+    padding: 10px;
+    margin-top: 0;
+    margin-top:90px;
+}

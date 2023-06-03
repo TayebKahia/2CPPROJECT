@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 function LoginPage(props){
-
-
+    
     const navigate = useNavigate() ;
     function AsStudent(){
         props.setRole("student")
@@ -23,7 +22,7 @@ function LoginPage(props){
                     <h2 className="sign-in">Sign In</h2>
                 </div>
                 <div className="login-part">
-                    <Login role={props.role} setRole={props.setRole} setTable={props.setTable}  />
+                    <Login profID={props.profID} setProfID={props.setProfID} role={props.role} setRole={props.setRole} setTable={props.setTable}  />
                     <div className="line"></div>
                     <span className="login-text forget-password" onClick={navigate("/ForgetPassword")}>FORGET YOUR PASSWORD ?</span>
                     <span className="login-text enter-as-student" onClick={AsStudent}>ENTER AS A STUDENT ?</span>

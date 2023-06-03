@@ -1,7 +1,7 @@
 import "./Session.css"
 const Session=(props)=>{
 let  classes=props.class+" "+"container" ;
-console.log(classes) ;
+// console.log(classes) ;
 return (
 <div className={classes}>
 <div className="type">{props.type}</div> 

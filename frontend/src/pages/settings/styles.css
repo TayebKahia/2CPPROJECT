@@ -76,4 +76,55 @@
 
 .stg{
     margin-bottom: 20px;
+<<<<<<< Updated upstream
+=======
+}
+
+.sett{
+    margin-left: calc(5rem + 15vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:20px 50px;
+    gap:20px;
+}
+
+
+/* left margin for side bar */
+
+.lft-mrg{
+    height: 100%;
+    width: 15vw;
+    /* background-color: red; */
+    margin-left:5rem ;
+    position: fixed;
+    top:0;
+}
+
+.selection{
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+.list-icon{
+    font-size:25px;
+}
+
+
+.settings-btn{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* gap: 20px; */
+    /* width: 80%; */
+    font-size: 1.5rem;
+    color:#fff;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.settings-logout{
+    background-color: red;
+>>>>>>> Stashed changes
 }

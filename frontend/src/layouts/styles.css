@@ -114,7 +114,12 @@ nav ul li:hover{
 }
 
 .logout:hover{
+<<<<<<< Updated upstream
     background-color: #4FACF7;
+=======
+    background-color: red;
+    color:white;
+>>>>>>> Stashed changes
 }
 
 
