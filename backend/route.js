@@ -30,8 +30,8 @@ router.route("/tableGroupe").get(controller.getTableGroupe);
 router.route("/test").post(controller.postTest).put(controller.updateTest);
 
 router.route("/room").post(controller.addRoom);
-router.route("/chapters").get(controller.getChapters);
-
+router.route("/chapters").get(controller.getChapters).put(controller.updateChapters);
+router.route("/sousChapitre").get(controller.getSousChapitre)
 router.route("/getAllTables").get(controller.getAllInfos);
 
 router

@@ -533,44 +533,59 @@ exports.addRoom = async (req, res) => {
 };
 
 exports.getChapters = async (req, res) => {
-  const {module,chapitre}=req.query
-  console.log(chapitre)
-  if (!chapitre){
+  const {module}=req.query
+  console.log("GetChapter "+req.query)
     try {
       let data = await dbQuery(`SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
       `,module)
       const chapter = data.map((result) => result.chapter);
+      // console.log(chapter)
       res.json({chapter})
     } catch(err){
-      console.log(err)
-      res.json({message:err})
-    }}
-    else if (chapitre){
-      try {
-        data = await dbQuery(`SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,[module,chapitre])
-        const sousChapitre = data.map((result) => result.sousChapitre)
-        console.log(chapitre)
-        console.log(sousChapitre)
-        res.json({sousChapitre})
-      }catch(err){
-        console.log(err)
-        res.json({message:err})
-      }
-}
+    console.log(err)
+    res.json({message:err})
+  }
 };
 
+exports.getSousChapitre = async (req,res)=>{
+  const {module,chapitre}=req.query
+  try {
+    data = await dbQuery(`SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,[module,chapitre])
+    const sousChapitre = data.map((result) => result.sousChapitre)
+    console.log("GetSousChapitre" +sousChapitre)
+    res.json({sousChapitre})
+  }catch(err){
+    console.log(err)
+    res.json({message:err})
+  }
+}
+
+
+
+exports.updateChapters=async (req,res)=>{
+const{IDSeance,chapter,sousChapitre}=req.body.infos;
+console.log(req.body.infos)
+const sql=`UPDATE seances
+ SET chapter = ?,etatDavancement = ?
+ WHERE IDSeance=? `
+const values=[chapter,sousChapitre,IDSeance];
+try{const result=await dbQuery(sql, values);
+  console.log(result);
+  res.json(result);}
+  catch(err){res.json({message:err})}
+
+}
 exports.getGroupTableSettings = async (req, res) => {
   console.log(req.query);
   const IDEns = req.query.IDEns;
   const IDProf = parseInt(IDEns);
   console.log(IDProf);
-  sql = `SELECT COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+  sql = `SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
   FROM seances
   JOIN enseignants ON seances.IDEns = enseignants.IDEns
   WHERE seances.IDEns =?`;
   try {
     const data = await dbQuery(sql, IDProf);
-    console.log(data)
     res.json(data);
   } catch (err) {
     res.json({ message: err });
