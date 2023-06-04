@@ -39,7 +39,6 @@ exports.createSalle = async (req, res) => {
         .json({ message: "Salle added successful", data: data });
     }
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -79,7 +78,6 @@ exports.createModule = async (req, res) => {
         .json({ message: "Module added  successful", data: data });
     }
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -113,7 +111,6 @@ exports.updateUser = async (req, res) => {
   SET Nom = ?, email =?, role=?
   WHERE IDEns=?`;
   const { IDEns, Nom, email, role } = req.body;
-  console.log(req.body);
 
   const values = [Nom, email, role, parseInt(IDEns)];
   const result = await dbQuery(sql, values);
@@ -122,7 +119,6 @@ exports.updateUser = async (req, res) => {
 };
 exports.createUser = async (req, res) => {
   const { Nom, email, password, role } = req.body;
-  console.log(req.body);
   try {
     // const emailExists = await checkExists(email,"enseignants","email");
     // if (emailExists) {
@@ -155,7 +151,6 @@ exports.deleteUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
 
@@ -178,7 +173,6 @@ exports.loginUser = async (req, res) => {
 
     return res.status(200).json({ success: true, role, IDEns });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -191,9 +185,7 @@ exports.ForgotPassword = async (req, res) => {
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
     const result = await dbQuery(sql, values);
-    console.log(result);
     if (result.length === 0) {
-      console.log("error happen in length");
       return res.status(401).json({ success: false, error: "Invalid email" });
     }
     const { IDEns } = result[0];
@@ -205,7 +197,6 @@ exports.ForgotPassword = async (req, res) => {
       message: "Password reset email sent successfully",
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -255,9 +246,7 @@ exports.confirmPassword = async (req, res) => {
     }
     /*const secret = jwt_secret + password;
     const verify = jwt.verify(token, secret);*/
-    console.log(result);
     const encryptedpassword = await bcrypt.hash(password, 10);
-    console.log(encryptedpassword);
     const sql = "UPDATE enseignants SET password =? WHERE IDEns =?";
     const values = [encryptedpassword, IDEns];
     const updated = await dbQuery(sql, values);
@@ -267,13 +256,11 @@ exports.confirmPassword = async (req, res) => {
         .status(400)
         .json({ success: false, error: "Password update failed" });
     }
-    console.log(updated);
     res.status(200).json({
       success: true,
       message: "Password has been updated successfully",
     });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ success: false, error: "Failed to update password" });
@@ -332,75 +319,25 @@ exports.getSettingsTable = async (req, res) => {
 exports.getRoomTable = async (req, res) => {
   try {
     const { jour, isEvery, salle } = req.query;
-    console.log({ jour, isEvery, salle });
     const roomSql = `SELECT codeSalle as room_name FROM salles ORDER BY room_name`;
     const rooms = await dbQuery(roomSql);
     let sql;
     let values;
-//TEST 1
-// SELECT seances.jour AS day,
-// seances.Heure AS heur,
-// groupes.NumGroupe,
-// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,enseignants.Nom, NULL), 'Libre') AS prof,
-// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,seances.CodeMod, NULL), 'Libre') AS moduleName,
-// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,seances.codeSalle, NULL), 'Libre') AS salle,
-// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,seances.codeType, NULL), 'Libre') AS type
-// FROM groupes
-// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
-// JOIN enseignants ON seances.IDEns = enseignants.IDEns
-// WHERE seances.codeClasse ="2CP"
-// ORDER BY groupes.NumGroupe;
-//     SELECT seances.jour,
-//        groupes.NumGroupe,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS eightToTen,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS tenToTwelve,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS twelveToFourteen,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS fourteenToSixteen
-// FROM groupes
-// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
-// JOIN enseignants on seances.IDEns=enseignants.IDEns
-// GROUP BY seances.jour, groupes.NumGroupe
-// ORDER BY seances.jour,groupes.NumGroupe;
-//TEST 3
-// SELECT seances.jour,
-// 	   seances.Heure as heur,
-//        groupes.NumGroupe,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.codeType), NULL)), 'LIBRE') AS type,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.CodeMod), NULL)), 'LIBRE') AS module,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(enseignants.Nom), NULL)), 'LIBRE') AS prof,
-//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.codeSalle), NULL)), 'LIBRE') AS salle
-// FROM groupes
-// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
-// JOIN enseignants ON seances.IDEns = enseignants.IDEns
-// GROUP BY seances.jour, groupes.NumGroupe
-// ORDER BY seances.jour, groupes.NumGroupe;
-///////////////////////////////////////////////////////////////////////////
-//TEST 4
-// SELECT seances.jour AS day,
-//        seances.Heure AS heur,
-//        groupes.NumGroupe,
-//        COALESCE(enseignants.Nom, 'LIBRE') AS prof,
-//        COALESCE(seances.CodeMod, 'LIBRE') AS moduleName,
-//        COALESCE(seances.codeSalle, 'LIBRE') AS salle,
-//        COALESCE(seances.codeType, 'LIBRE') AS type
-// FROM groupes
-// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
-// LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
-// ORDER BY heur,groupes.NumGroupe;
-
+    let data;
+    let salles;
     if (isEvery === "true") {
       sql = `SELECT salles.codeSalle as room_name, salles.capacite as capacity,
   COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS eightToTen,
   COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS tenToTwelve,
   COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS twelveToFourteen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS fourteenToSixteen
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS fourteenToSixteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '16-17' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS sixteenToSeventeen
   FROM salles
   LEFT JOIN seances ON salles.codeSalle = seances.codeSalle
   GROUP BY salles.codeSalle, salles.capacite;`;
       values = [jour, jour, jour, jour];
-      const data = await dbQuery(sql, values);
-      const salles = rooms.map((result) => result.room_name);
-      // console.log(data)
+      data = await dbQuery(sql, values);
+      salles = rooms.map((result) => result.room_name);
       res.json({ roomData: data, rooms: salles });
     } else {
       sql = `SELECT salles.codeSalle as room_name, salles.capacite as capacity,
@@ -408,14 +345,14 @@ exports.getRoomTable = async (req, res) => {
   COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS tenToTwelve,
   COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS twelveToFourteen,
   COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS fourteenToSixteen
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '16-17' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS sixteenToSeventeen
   FROM salles
   LEFT JOIN seances ON salles.codeSalle = seances.codeSalle
   WHERE salles.codeSalle =?
   GROUP BY salles.codeSalle, salles.capacite;`;
       values = [jour, jour, jour, jour, salle];
-      const data = await dbQuery(sql, values);
-      const salles = rooms.map((result) => result.room_name);
-      // console.log(data)
+      data = await dbQuery(sql, values);
+      salles = rooms.map((result) => result.room_name);
       res.json({ roomData: data, rooms: salles });
     }
   } catch (err) {
@@ -448,6 +385,16 @@ exports.getTableGroupe = async (req, res) => {
     }
   }
 };
+const isGroupFree = async (NumGroupe,day,hour)=>{
+ const groupSql=`SELECT * FROM seances WHERE jour =? AND heure =? AND NumGroupe=? `
+ try{
+  const result = await dbQuery(groupSql,[day,hour,NumGroupe])
+  return result.length === 0 || result[0]?.IDSeance === parseInt(IDSeance);
+ } catch (err) {
+  console.error(err);
+  throw err;
+}
+}
 
 const isFreeUpdate = async (day, salle, hour, IDSeance) => {
   try {
@@ -485,10 +432,11 @@ exports.updateTest = async (req, res) => {
     const teachSql = `SELECT IDEns FROM enseignants WHERE Nom = ?`;
     const result = await dbQuery(teachSql, teacher);
     console.log(result[0].IDEns);
-
+    const groupFree = await isGroupFree(day,hour,group)
     const isRoomFree = await isFreeUpdate(day, salle, hour, IDSeance);
 
     if (isRoomFree) {
+      if (groupFree) {
       const updateSql = `UPDATE seances 
       SET codeClasse = ?, jour = ?, Heure = ?, codeSalle = ?, codeType = ?, NumGroupe = ?, CodeMod = ?,IDEns=?
       WHERE IDSeance = ?`;
@@ -506,12 +454,13 @@ exports.updateTest = async (req, res) => {
 
       await dbQuery(updateSql, updateValues);
       return res.json({ message: "Success" });
-    } else {
-      return res.json({ message: "Room Is Already Being Used" });
+    }else {res.json({message: "Group alredy has a session"})}  
+  } else {
+      return res.json({ message: "Room already being Used" });
     }
   } catch (err) {
     console.error(err);
-    return res.json({ message: "An error occurred" });
+    return res.json({ message: "An Update Error Occurred" });
   }
 };
 
@@ -535,23 +484,22 @@ exports.postTest = async (req, res) => {
         group,
       ];
       await dbQuery(postSql, postValues);
-      return res.json({ message: "success" });
+      return res.json({ message: "Success" });
     } else {
       return res.json({ message: "Room Is Already Being Used" });
     }
   } catch (err) {
-    return res.json({ message: "An error occurred" });
+    return res.json({ message: "An Creation Error occurred" });
   }
 };
 
 exports.deleteSettingsTable = async (req, res) => {
   try {
     const IDSeances = req.body.IDSeance;
-    console.log(IDSeances);
     await dbQuery(`DELETE FROM seances WHERE IDSeance=?`, parseInt(IDSeances));
-    return res.json({ message: `Seance deleted successfully` });
+    return res.json({ message: `Session deleted successfully` });
   } catch (err) {
-    return res.json({ message: "An error occurred" });
+    return res.json({ message: "An Delete Error occurred" });
   }
 };
 
@@ -559,7 +507,6 @@ exports.addRoom = async (req, res) => {
   try {
     const selectQuery = "SELECT * FROM salles WHERE codeSalle=?";
     const selectValues = [req.body.codeSalle];
-    console.log(selectValues);
     const rooms = await dbQuery(selectQuery, selectValues);
 
     if (rooms.length === 0) {
@@ -584,7 +531,6 @@ exports.addRoom = async (req, res) => {
 
 exports.getChapters = async (req, res) => {
   const {module}=req.query
-  console.log("GetChapter "+req.query)
     try {
       let data = await dbQuery(`SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
       `,module)
@@ -599,7 +545,6 @@ exports.getChapters = async (req, res) => {
 
 exports.getSousChapitre = async (req,res)=>{
   const {module,chapitre}=req.query
-  console.log(req.query)
   try {
     data = await dbQuery(`SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,[module,chapitre])
     const sousChapitre = data.map((result) => result.sousChapitre)
@@ -612,7 +557,6 @@ exports.getSousChapitre = async (req,res)=>{
 }
 
 exports.getScheduleTable = async (req,res)=>{
-  console.log("GET SCHEDULE TABLE ENDPOINT")
   const sql = `SELECT jours.jour AS day, heures.Heure AS heur, COALESCE(seances.NumGroupe, groupes.NumGroupe) AS "group",
   COALESCE(enseignants.Nom, 'Libre') AS prof,
   COALESCE(seances.codeType, 'Libre') AS type,
@@ -631,7 +575,8 @@ FROM groupes
 ) AS groupes
 LEFT JOIN seances ON jours.jour = seances.jour AND heures.Heure = seances.Heure AND seances.NumGroupe = groupes.NumGroupe AND seances.codeClasse = groupes.codeClasse 
 LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
-WHERE heures.Heure <> '12-14' AND groupes.codeClasse = '2CP' AND groupes.section = 'A';`
+WHERE heures.Heure <> '12-14' AND groupes.codeClasse = '2CP' AND groupes.section = 'A'
+ORDER BY "group";`
   try{
     data = await dbQuery(sql)
     res.json(data)
@@ -644,7 +589,6 @@ WHERE heures.Heure <> '12-14' AND groupes.codeClasse = '2CP' AND groupes.section
 
 exports.updateChapters=async (req,res)=>{
 const{IDSeance,chapter,sousChapitre}=req.body.infos;
-console.log(req.body.infos)
 const sql=`UPDATE seances
  SET chapter = ?,etatDavancement = ?
  WHERE IDSeance=? `
@@ -658,10 +602,8 @@ try{const result=await dbQuery(sql, values);
 
 
 exports.getGroupTableSettings = async (req, res) => {
-  console.log(req.query);
   const IDEns = req.query.IDEns;
   const IDProf = parseInt(IDEns);
-  console.log(IDProf);
   sql = `SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
   FROM seances
   JOIN enseignants ON seances.IDEns = enseignants.IDEns
@@ -678,7 +620,6 @@ exports.getGroupTableSettings = async (req, res) => {
 exports.getTeacherSettings= async (req,res)=>{
   try {
     const {year,IDEns} = req.query;
-    console.log(IDEns)
     const sql = `SELECT NumGroupe FROM seances WHERE codeClasse=? AND IDEns=? `;
     const sql2 = `SELECT codeSalle FROM salles`;
     const sql3 = `SELECT CodeMod FROM seances Where codeClasse=? AND IDEns=?`;
