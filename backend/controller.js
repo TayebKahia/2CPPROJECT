@@ -337,13 +337,63 @@ exports.getRoomTable = async (req, res) => {
     const rooms = await dbQuery(roomSql);
     let sql;
     let values;
+//TEST 1
+// SELECT seances.jour AS day,
+// seances.Heure AS heur,
+// groupes.NumGroupe,
+// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,enseignants.Nom, NULL), 'Libre') AS prof,
+// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,seances.CodeMod, NULL), 'Libre') AS moduleName,
+// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,seances.codeSalle, NULL), 'Libre') AS salle,
+// COALESCE(IF( seances.NumGroupe=groupes.NumGroupe,seances.codeType, NULL), 'Libre') AS type
+// FROM groupes
+// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
+// JOIN enseignants ON seances.IDEns = enseignants.IDEns
+// WHERE seances.codeClasse ="2CP"
+// ORDER BY groupes.NumGroupe;
+//     SELECT seances.jour,
+//        groupes.NumGroupe,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS eightToTen,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS tenToTwelve,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS twelveToFourteen,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16', CONCAT(seances.CodeMod, ' | ', enseignants.Nom, ' | ', seances.codeSalle), NULL)), 'LIBRE') AS fourteenToSixteen
+// FROM groupes
+// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
+// JOIN enseignants on seances.IDEns=enseignants.IDEns
+// GROUP BY seances.jour, groupes.NumGroupe
+// ORDER BY seances.jour,groupes.NumGroupe;
+//TEST 3
+// SELECT seances.jour,
+// 	   seances.Heure as heur,
+//        groupes.NumGroupe,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.codeType), NULL)), 'LIBRE') AS type,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.CodeMod), NULL)), 'LIBRE') AS module,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(enseignants.Nom), NULL)), 'LIBRE') AS prof,
+//        COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10', CONCAT(seances.codeSalle), NULL)), 'LIBRE') AS salle
+// FROM groupes
+// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
+// JOIN enseignants ON seances.IDEns = enseignants.IDEns
+// GROUP BY seances.jour, groupes.NumGroupe
+// ORDER BY seances.jour, groupes.NumGroupe;
+///////////////////////////////////////////////////////////////////////////
+//TEST 4
+// SELECT seances.jour AS day,
+//        seances.Heure AS heur,
+//        groupes.NumGroupe,
+//        COALESCE(enseignants.Nom, 'LIBRE') AS prof,
+//        COALESCE(seances.CodeMod, 'LIBRE') AS moduleName,
+//        COALESCE(seances.codeSalle, 'LIBRE') AS salle,
+//        COALESCE(seances.codeType, 'LIBRE') AS type
+// FROM groupes
+// LEFT JOIN seances ON groupes.NumGroupe = seances.NumGroupe
+// LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
+// ORDER BY heur,groupes.NumGroupe;
 
     if (isEvery === "true") {
       sql = `SELECT salles.codeSalle as room_name, salles.capacite as capacity,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS eightToTen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS tenToTwelve,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS twelveToFourteen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS fourteenToSixteen
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS eightToTen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS tenToTwelve,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS twelveToFourteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS fourteenToSixteen
   FROM salles
   LEFT JOIN seances ON salles.codeSalle = seances.codeSalle
   GROUP BY salles.codeSalle, salles.capacite;`;
@@ -354,10 +404,10 @@ exports.getRoomTable = async (req, res) => {
       res.json({ roomData: data, rooms: salles });
     } else {
       sql = `SELECT salles.codeSalle as room_name, salles.capacite as capacity,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS eightToTen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS tenToTwelve,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS twelveToFourteen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS fourteenToSixteen
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS eightToTen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS tenToTwelve,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS twelveToFourteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Libre') AS fourteenToSixteen
   FROM salles
   LEFT JOIN seances ON salles.codeSalle = seances.codeSalle
   WHERE salles.codeSalle =?
@@ -561,6 +611,35 @@ exports.getSousChapitre = async (req,res)=>{
   }
 }
 
+exports.getScheduleTable = async (req,res)=>{
+  console.log("GET SCHEDULE TABLE ENDPOINT")
+  const sql = `SELECT jours.jour AS day, heures.Heure AS heur, COALESCE(seances.NumGroupe, groupes.NumGroupe) AS "group",
+  COALESCE(enseignants.Nom, 'Libre') AS prof,
+  COALESCE(seances.codeType, 'Libre') AS type,
+  COALESCE(seances.CodeMod, 'Libre') AS moduleName,
+  COALESCE(seances.codeClasse, groupes.codeClasse) AS codeClasse,
+  COALESCE(groupes.section, groupes.section) AS section,
+  COALESCE(seances.codeSalle, 'Libre') AS salle
+FROM (
+SELECT DISTINCT jour
+FROM jours
+) jours
+CROSS JOIN heures
+CROSS JOIN (
+SELECT DISTINCT NumGroupe, codeClasse, section
+FROM groupes
+) AS groupes
+LEFT JOIN seances ON jours.jour = seances.jour AND heures.Heure = seances.Heure AND seances.NumGroupe = groupes.NumGroupe AND seances.codeClasse = groupes.codeClasse 
+LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
+WHERE heures.Heure <> '12-14' AND groupes.codeClasse = '2CP' AND groupes.section = 'A';`
+  try{
+    data = await dbQuery(sql)
+    res.json(data)
+  }
+  catch(err){
+    res.json({message:err})
+  }
+}
 
 
 exports.updateChapters=async (req,res)=>{

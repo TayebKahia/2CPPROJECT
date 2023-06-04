@@ -51,6 +51,8 @@ router
 
 router.route(`/groupeTableSettings`).get(controller.getGroupTableSettings);
 
+router.route('/scheduleTable').get(controller.getScheduleTable)
+
 module.exports = router;
 // dont forget to clear window.location storage
 //  localStorage.clear();
