@@ -124,10 +124,10 @@ exports.createUser = async (req, res) => {
   const { Nom, email, password, role } = req.body;
   console.log(req.body);
   try {
-    const emailExists = await checkExists(email,"enseignants","email");
-    if (emailExists) {
-      return res.status(409).json({ error: "Email already exists" });
-    } else {
+    // const emailExists = await checkExists(email,"enseignants","email");
+    // if (emailExists) {
+    //   return res.status(409).json({ error: "Email already exists" });
+    // } else {
       const encryptedpassword = await bcrypt.hash(password, 10);
       const sql =
         "INSERT INTO enseignants (Nom, email, password, role) VALUES (?)";
@@ -137,7 +137,7 @@ exports.createUser = async (req, res) => {
       return res
         .status(200)
         .json({ message: "Registration successful", data: data });
-    }
+    // }
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Internal server error" });
@@ -549,10 +549,11 @@ exports.getChapters = async (req, res) => {
 
 exports.getSousChapitre = async (req,res)=>{
   const {module,chapitre}=req.query
+  console.log(req.query)
   try {
     data = await dbQuery(`SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,[module,chapitre])
     const sousChapitre = data.map((result) => result.sousChapitre)
-    console.log("GetSousChapitre" +sousChapitre)
+    console.log("GetSousChapitre " +sousChapitre)
     res.json({sousChapitre})
   }catch(err){
     console.log(err)
@@ -570,11 +571,13 @@ const sql=`UPDATE seances
  WHERE IDSeance=? `
 const values=[chapter,sousChapitre,IDSeance];
 try{const result=await dbQuery(sql, values);
-  console.log(result);
+  console.log("Success");
   res.json(result);}
   catch(err){res.json({message:err})}
 
 }
+
+
 exports.getGroupTableSettings = async (req, res) => {
   console.log(req.query);
   const IDEns = req.query.IDEns;
@@ -591,3 +594,37 @@ exports.getGroupTableSettings = async (req, res) => {
     res.json({ message: err });
   }
 };
+
+
+exports.getTeacherSettings= async (req,res)=>{
+  try {
+    const {year,IDEns} = req.query;
+    console.log(IDEns)
+    const sql = `SELECT NumGroupe FROM seances WHERE codeClasse=? AND IDEns=? `;
+    const sql2 = `SELECT codeSalle FROM salles`;
+    const sql3 = `SELECT CodeMod FROM seances Where codeClasse=? AND IDEns=?`;
+    const sql4 = `SELECT heure FROM heures`;
+    ////////////////////////////////
+    const groupes = await dbQuery(sql,[year,IDEns]);
+    const numGroupes = groupes.map((result) => result.NumGroupe);
+    ////////////////////////////////
+    const rooms = await dbQuery(sql2);
+    const salles = rooms.map((result) => result.codeSalle);
+    /////////////// //
+    const matieres = await dbQuery(sql3,[year,IDEns]);
+    const numMatieres = matieres.map((result) => result.CodeMod);
+    ////////////////////////////////
+    const hours = await dbQuery(sql4);
+    const numHeures = hours.map((result) => result.heure);
+    ////////////////////////////////
+    const data = [numGroupes, salles, numMatieres, numHeures];
+    res.json({
+      groups: data[0],
+      rooms: data[1],
+      modules: data[2],
+      hours: data[3],
+    });
+  } catch (err) {
+    res.json(err);
+  }
+} 

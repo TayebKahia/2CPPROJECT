@@ -34,6 +34,8 @@ router.route("/chapters").get(controller.getChapters).put(controller.updateChapt
 router.route("/sousChapitre").get(controller.getSousChapitre)
 router.route("/getAllTables").get(controller.getAllInfos);
 
+router.route("/teacherSettings").get(controller.getTeacherSettings)
+
 router
   .route("/salleTable")
   .get(controller.getAllInfos)
