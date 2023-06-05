@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const db = require("./db-config");
+const util = require("util");
+const dbQuery = util.promisify(db.query).bind(db);
 //exports.checkSalleExist=function (salle) {
   function checkGroupeExist(codeClasse,NumGroupe) {
     return new Promise((resolve, reject) => {
@@ -52,37 +54,52 @@ async function sendPasswordResetEmail(email, html) {
     throw new Error("Failed to send password reset email");
   }
 }
-
-const isFreeUpdate = async (day, salle, hour, IDSeance) => {
+const isGroupFree = async (NumGroupe, day, hour, IDSeance) => {
+  const groupSql = `SELECT * FROM seances WHERE jour = ? AND heure = ? AND NumGroupe = ?`;
   try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
-
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0 || data[0]?.IDSeance === parseInt(IDSeance);
+    const result = await dbQuery(groupSql, [day, hour, NumGroupe]);
+    return result.length === 0 || result[0]?.IDSeance === parseInt(IDSeance);
   } catch (err) {
     console.error(err);
     throw err;
   }
 };
 
-const isFreeAdd = async (day, salle, hour) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
+ 
+ const isFreeUpdate = async (day, salle, hour, IDSeance) => {
+   try {
+     const freeSql =
+       "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
+     const freeValues = [day, salle, hour];
+ 
+     const data = await dbQuery(freeSql, freeValues);
+     return data.length === 0 || data[0]?.IDSeance === parseInt(IDSeance);
+   } catch (err) {
+     console.error(err);
+     throw err;
+   }
+ };
+ 
+ const isFreeAdd = async (day, salle, hour) => {
+   try {
+     const freeSql =
+       "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
+     const freeValues = [day, salle, hour];
+ 
+     const data = await dbQuery(freeSql, freeValues);
+     return data.length === 0;
+   } catch (err) {
+     console.error(err);
+     throw err;
+   }
+ };
 
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
+
 
 
 
 module.exports = {
-  checkExist,sendPasswordResetEmail,checkGroupeExist,isFreeUpdate,isFreeAdd
+
+  checkExist,sendPasswordResetEmail,checkGroupeExist,isFreeUpdate,isFreeAdd,isGroupFree
+
 };

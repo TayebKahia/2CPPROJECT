@@ -11,8 +11,11 @@ const {
   checkGroupeExist,
   checkExist,
   sendPasswordResetEmail,
-  isFreeUpdate,
+
   isFreeAdd,
+  isFreeUpdate,
+  isGroupFree
+
 } = require("./API features");
 //Salles Info
 
@@ -34,18 +37,17 @@ exports.createSalle = async (req, res) => {
   try {
     const salleExist = await checkExist(codeSalle, "salles", "codeSalle");
     if (salleExist) {
-      return res.status(409).json({ error: "Salle deja exister" });
+      return res.status(409).json({ success:false,message: "Room already exists" });
     } else {
       const sql = "INSERT INTO salles (codeSalle,desSalle,capacite) VALUES (?)";
       const values = [codeSalle, desSalle, capacite];
       const data = await dbQuery(sql, [values]);
       return res
         .status(200)
-        .json({ message: "Salle added successful", data: data });
+        .json({ success:true,message: "Salle added successful", data: data });
     }
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ success:false,message: "Internal server error" });
   }
 };
 
@@ -111,7 +113,6 @@ exports.createModule = async (req, res) => {
         .json({ message: "Module added  successful", data: data });
     }
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -119,16 +120,20 @@ exports.createModule = async (req, res) => {
 exports.updateModule = async (req, res) => {
   try {
     const { CodeMod, DesMod, codeClasse, IDMod } = req.body;
-    const sql = `UPDATE modules
-      SET CodeMod = ?, DesMod = ?, codeClasse = ?
-      WHERE IDMod = ?`;
-    const values = [CodeMod, DesMod, codeClasse, IDMod];
-    const result = await dbQuery(sql, values);
-    res.json(result);
+    const mods = await dbQuery(`SELECT * FROM modules WHERE CodeMod=?`, [CodeMod]);
+      if (mods.length === 0 || mods[0]?.IDMod === parseInt(IDMod)){
+          const sql = `UPDATE modules
+        SET CodeMod = ?, DesMod = ?, codeClasse = ?
+        WHERE IDMod = ?`;
+      const values = [CodeMod, DesMod, codeClasse, IDMod];
+      const result = await dbQuery(sql, values);
+      res.json(result);
+      }
+      else {res.json({success:false,message:"Module Already exists"})}
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while updating the module." });
+      .json({success:false, message: "An error occurred while updating the module." });
   }
 };
 
@@ -173,7 +178,7 @@ exports.createGroupe = async (req, res) => {
   try {
     const groupeExist = await checkGroupeExist(codeClasse, NumGroupe);
     if (groupeExist) {
-      return res.status(409).json({ error: "Groupe deja exister" });
+      return res.status(409).json({ success:false,message: "Group already exists" });
     } else {
       const sql =
         "INSERT INTO groupes (codeClasse,NumGroupe,section) VALUES (?)";
@@ -181,50 +186,79 @@ exports.createGroupe = async (req, res) => {
       const data = await dbQuery(sql, [values]);
       return res
         .status(200)
-        .json({ message: "Groupe added successful", data: data });
+        .json({success:true, message: "Groupe added successful", data: data });
     }
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({success:false, message: "Internal server error" });
   }
 };
 
+// exports.updateGroupe = async (req, res) => {
+//   try {
+//     const { codeClasse, NumGroupe, section, IDGroup } = req.body;
+//     console.log(req.body);
+//     if (!codeClasse || !NumGroupe || !section || !IDGroup) {
+//       return res.status(400).json({ success:false,message: "Missing required fields" });
+//     }
+//     else {
+//       const group = await dbQuery(`SELECT * FROM groupes WHERE codeClasse=? AND NumGroupe=?`,[codeClasse,NumGroupe])
+//       if (group.length===0 || group[0]?.IDGroup === parseInt(IDGroup)){
+//       const sql = `UPDATE groupes
+//       SET codeClasse = ?, NumGroupe = ?, section = ?
+//       WHERE IDGroup = ?`;
+
+//     const values = [codeClasse, NumGroupe, section, parseInt(IDGroup)];
+//     const result = await dbQuery(sql, values);
+//     res.json( {success:true,message:"Group Updated successufuly"})
+//       }
+//     }
+    
+//       return res.status(409).json({ success:false,message: "Group already exists" });
+//     } catch (error) {
+//       console.log(error);
+//     res
+//       .status(500)
+//       .json({ success:false,message: "An error occurred while updating the groupe." });
+//   }
+// };
 exports.updateGroupe = async (req, res) => {
   try {
-    const { codeClasse, NumGroupe, section, IDGroupe } = req.body;
+    const { codeClasse, NumGroupe, section, IDGroup } = req.body;
+    console.log(req.body);
+    if (!codeClasse || !NumGroupe || !section || !IDGroup) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    } else {
+      const group = await dbQuery(`SELECT * FROM groupes WHERE codeClasse=? AND NumGroupe=?`, [codeClasse, NumGroupe]);
+      if (group.length === 0 || group[0]?.IDGroup === parseInt(IDGroup)) {
+        const sql = `UPDATE groupes
+        SET codeClasse = ?, NumGroupe = ?, section = ?
+        WHERE IDGroup = ?`;
 
-    if (!codeClasse || !NumGroupe || !section || !IDGroupe) {
-      return res.status(400).json({ error: "Missing required fields" });
+        const values = [codeClasse, NumGroupe, section, parseInt(IDGroup)];
+        await dbQuery(sql, values);
+        return res.json({ success: true, message: "Group updated successfully" });
+      } else {
+        return res.status(409).json({ success: false, message: "Group already exists" });
+      }
     }
-
-    const sql = `UPDATE groupes
-      SET codeClasse = ?, NumGroupe = ?, section = ?
-      WHERE IDGroupe = ?`;
-
-    const values = [codeClasse, NumGroupe, section, parseInt(IDGroupe)];
-    const result = await dbQuery(sql, values);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Groupe not found" });
-    }
-
-    res.json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while updating the groupe." });
+    console.log(error);
+    return res.status(500).json({ success: false, message: "An error occurred while updating the group." });
   }
 };
+
 
 exports.deleteGroupe = async (req, res) => {
   try {
-    const { IDGroupe } = req.body;
+    const { IDGroup } = req.body;
+    console.log(req.body)
 
-    if (!IDGroupe) {
+    if (!IDGroup) {
       return res.status(400).json({ error: "IDGroupe is required" });
     }
-    const sql = "DELETE FROM groupes WHERE IDGroupe = ?";
-    const values = [parseInt(IDGroupe)];
+    const sql = "DELETE FROM groupes WHERE IDGroup = ?";
+    const values = [parseInt(IDGroup)];
     const result = await dbQuery(sql, values);
 
     if (result.affectedRows === 0) {
@@ -266,6 +300,7 @@ exports.updateUser = async (req, res) => {
       encryptedPassword,
       parseInt(IDEns),
     ];
+
 
     const result = await dbQuery(sql, values);
 
@@ -347,7 +382,6 @@ exports.loginUser = async (req, res) => {
 
     return res.status(200).json({ success: true, role, IDEns });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -366,7 +400,6 @@ exports.ForgotPassword = async (req, res) => {
     const values = [email];
     const result = await dbQuery(sql, values);
     if (result.length === 0) {
-      console.log("error happen in length");
       return res.status(401).json({ success: false, error: "Invalid email" });
     }
     const { IDEns } = result[0];
@@ -380,7 +413,6 @@ exports.ForgotPassword = async (req, res) => {
       message: "Password reset email sent successfully",
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -415,7 +447,6 @@ exports.updatePassword = async (req, res) => {
     /*const secret = jwt_secret + password;
     const verify = jwt.verify(token, secret);*/
     const encryptedpassword = await bcrypt.hash(password, 10);
-    console.log(encryptedpassword);
     const sql = "UPDATE enseignants SET password =? WHERE IDEns =?";
     const values = [encryptedpassword, IDEns];
     const updated = await dbQuery(sql, values);
@@ -425,13 +456,11 @@ exports.updatePassword = async (req, res) => {
         .status(400)
         .json({ success: false, error: "Password update failed" });
     }
-    console.log(updated);
     res.status(200).json({
       success: true,
       message: "Password has been updated successfully",
     });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ success: false, error: "Failed to update password" });
@@ -490,44 +519,45 @@ exports.getSettingsTable = async (req, res) => {
 exports.getRoomTable = async (req, res) => {
   try {
     const { jour, isEvery, salle } = req.query;
-    console.log({ jour, isEvery, salle });
+    console.log(req.query)
     const roomSql = `SELECT codeSalle as room_name FROM salles ORDER BY room_name`;
     const rooms = await dbQuery(roomSql);
     let sql;
     let values;
-
+    let data;
+    let salles;
     if (isEvery === "true") {
       sql = `SELECT salles.codeSalle as room_name, salles.capacite as capacity,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS eightToTen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS tenToTwelve,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS twelveToFourteen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS fourteenToSixteen
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS eightToTen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS tenToTwelve,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS twelveToFourteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS fourteenToSixteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '16-17' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS sixteenToSeventeen
   FROM salles
   LEFT JOIN seances ON salles.codeSalle = seances.codeSalle
   GROUP BY salles.codeSalle, salles.capacite;`;
-      values = [jour, jour, jour, jour];
-      const data = await dbQuery(sql, values);
-      const salles = rooms.map((result) => result.room_name);
-      // console.log(data)
+      values = [jour, jour, jour, jour,jour];
+      data = await dbQuery(sql, values);
+      salles = rooms.map((result) => result.room_name);
       res.json({ roomData: data, rooms: salles });
     } else {
       sql = `SELECT salles.codeSalle as room_name, salles.capacite as capacity,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS eightToTen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS tenToTwelve,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS twelveToFourteen,
-  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Empty') AS fourteenToSixteen
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '8-10' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS eightToTen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '10-12' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS tenToTwelve,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '12-14' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS twelveToFourteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '14-16' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS fourteenToSixteen,
+  COALESCE(GROUP_CONCAT(IF(seances.Heure = '16-17' AND seances.jour=?, CONCAT(seances.CodeMod, ' | ', seances.NumGroupe), NULL)), 'Free') AS sixteenToSeventeen
   FROM salles
   LEFT JOIN seances ON salles.codeSalle = seances.codeSalle
   WHERE salles.codeSalle =?
   GROUP BY salles.codeSalle, salles.capacite;`;
-      values = [jour, jour, jour, jour, salle];
-      const data = await dbQuery(sql, values);
-      const salles = rooms.map((result) => result.room_name);
-      // console.log(data)
-      res.json({ roomData: data, rooms: salles });
+      values = [jour, jour, jour, jour,jour, salle];
+      data = await dbQuery(sql, values);
+      salles = rooms.map((result) => result.room_name);
+      res.json({ success:true,roomData: data, rooms: salles });
     }
   } catch (err) {
-    res.json({ message: "An error occurred" });
+    res.json({ success:false,message: "An error occurred" });
   }
 };
 
@@ -543,7 +573,7 @@ exports.getTableGroupe = async (req, res) => {
       res.json({ message: err });
     }
   } else {
-    const sql = `SELECT COALESCE(CodeMod, 'VIDE') AS CodeMod, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+    const sql = `SELECT COALESCE(CodeMod, 'Empty') AS CodeMod, COALESCE(enseignants.Nom, 'Empty') AS Nom,COALESCE(chapter, 'Empty') AS Chapitre,COALESCE(etatDavancement, 'Empty') AS etatDavancement
       FROM seances
       LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
       WHERE codeClasse = ? AND NumGroupe = ?`;
@@ -557,6 +587,7 @@ exports.getTableGroupe = async (req, res) => {
   }
 };
 
+
 exports.updateTest = async (req, res) => {
   try {
     const { year, day, hour, salle, type, group, module, IDSeance, teacher } =
@@ -564,11 +595,10 @@ exports.updateTest = async (req, res) => {
 
     const teachSql = `SELECT IDEns FROM enseignants WHERE Nom = ?`;
     const result = await dbQuery(teachSql, teacher);
-    console.log(result[0].IDEns);
-
+    const groupFree = await isGroupFree(day,hour,group)
     const isRoomFree = await isFreeUpdate(day, salle, hour, IDSeance);
-
     if (isRoomFree) {
+      if (groupFree) {
       const updateSql = `UPDATE seances 
       SET codeClasse = ?, jour = ?, Heure = ?, codeSalle = ?, codeType = ?, NumGroupe = ?, CodeMod = ?,IDEns=?
       WHERE IDSeance = ?`;
@@ -585,16 +615,15 @@ exports.updateTest = async (req, res) => {
       ];
 
       await dbQuery(updateSql, updateValues);
-      return res.json({ message: "Success" });
-    } else {
-      return res.json({ message: "Room Is Already Being Used" });
+      return res.json({ success:true,message: "Success" });
+    }else {res.json({success:false,message: "Group already has a session"})}} 
+    else { return res.json({success:false, message: "Room already being Used" });
     }
   } catch (err) {
     console.error(err);
-    return res.json({ message: "An error occurred" });
+    return res.json({success:false, message: "An Update Error Occurred" });
   }
 };
-
 exports.postTest = async (req, res) => {
   try {
     const { year, day, hour, salle, type, group, module, teacher } =
@@ -615,23 +644,22 @@ exports.postTest = async (req, res) => {
         group,
       ];
       await dbQuery(postSql, postValues);
-      return res.json({ message: "success" });
+      return res.json({success:true, message: "Success" });
     } else {
-      return res.json({ message: "Room Is Already Being Used" });
+      return res.json({ success:false,message: "Room Is Already Being Used" });
     }
   } catch (err) {
-    return res.json({ message: "An error occurred" });
+    return res.json({success:false, message: "An Creation Error occurred" });
   }
 };
 
 exports.deleteSettingsTable = async (req, res) => {
   try {
     const IDSeances = req.body.IDSeance;
-    console.log(IDSeances);
     await dbQuery(`DELETE FROM seances WHERE IDSeance=?`, parseInt(IDSeances));
-    return res.json({ message: `Seance deleted successfully` });
+    return res.json({ message: `Session deleted successfully` });
   } catch (err) {
-    return res.json({ message: "An error occurred" });
+    return res.json({ message: "An Delete Error occurred" });
   }
 };
 
@@ -639,19 +667,45 @@ exports.getChapters = async (req, res) => {
   const { module } = req.query;
   console.log("GetChapter " + req.query);
   try {
-    let data = await dbQuery(
-      `SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
-      `,
-      module
-    );
-    const chapter = data.map((result) => result.chapter);
-    // console.log(chapter)
-    res.json({ chapter });
-  } catch (err) {
-    console.log(err);
-    res.json({ message: err });
+    const selectQuery = "SELECT * FROM salles WHERE codeSalle=?";
+    const selectValues = [req.body.codeSalle];
+    const rooms = await dbQuery(selectQuery, selectValues);
+
+    if (rooms.length === 0) {
+      const insertQuery =
+        "INSERT INTO salles (codeSalle, desSalle, capacite) VALUES (?, ?, ?)";
+      const insertValues = [
+        req.body.codeSalle,
+        req.body.desSalle,
+        req.body.capacite,
+      ];
+      await db.query(insertQuery, insertValues);
+      return res
+        .status(201)
+        .json({ success: true, message: "Room created successfully" });
+    }
+
+    return res.json({ message: "Room already exists" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
   }
 };
+
+exports.getChapters = async (req, res) => {
+  const {module}=req.query
+    try {
+      let data = await dbQuery(`SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
+      `,module)
+      const chapter = data.map((result) => result.chapter);
+      // console.log(chapter)
+      res.json({chapter})
+    } catch(err){
+    console.log(err)
+    res.json({message:err})
+  }
+};
+
+
 
 exports.getSousChapitre = async (req, res) => {
   const { module, chapitre } = req.query;
@@ -694,9 +748,116 @@ exports.getGroupTableSettings = async (req, res) => {
   JOIN enseignants ON seances.IDEns = enseignants.IDEns
   WHERE seances.IDEns =?`;
   try {
-    const data = await dbQuery(sql, IDProf);
-    res.json(data);
-  } catch (err) {
+    data = await dbQuery(`SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,[module,chapitre])
+    const sousChapitre = data.map((result) => result.sousChapitre)
+    console.log("GetSousChapitre " +sousChapitre)
+    res.json({sousChapitre})
+  }catch(err){
+    console.log(err)
+    res.json({message:err})
+  }
+}
+
+exports.getScheduleTable = async (req,res)=>{
+  const {cycle,section}= req.query
+  const sql = `SELECT jours.jour AS day, heures.Heure AS heur, COALESCE(seances.NumGroupe, groupes.NumGroupe) AS "group",
+  COALESCE(enseignants.Nom, 'Free') AS prof,
+  COALESCE(seances.codeType, 'Free') AS type,
+  COALESCE(seances.CodeMod, 'Free') AS moduleName,
+  COALESCE(seances.codeClasse, groupes.codeClasse) AS codeClasse,
+  COALESCE(groupes.section, groupes.section) AS section,
+  COALESCE(seances.codeSalle, 'Free') AS salle
+FROM (
+SELECT DISTINCT jour
+FROM jours
+) jours
+CROSS JOIN heures
+CROSS JOIN (
+SELECT DISTINCT NumGroupe, codeClasse, section
+FROM groupes
+) AS groupes
+LEFT JOIN seances ON jours.jour = seances.jour AND heures.Heure = seances.Heure AND seances.NumGroupe = groupes.NumGroupe AND seances.codeClasse = groupes.codeClasse 
+LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
+WHERE heures.Heure <> '12-14' AND groupes.codeClasse = ? AND groupes.section = ?
+ORDER BY "group";`
+  try{
+    data = await dbQuery(sql,[cycle,section])
+    res.json(data)
+  }
+  catch(err){
+    res.json({message:err})
+  }
+}
+
+
+exports.updateChapters=async (req,res)=>{
+const{IDSeance,chapter,sousChapitre}=req.body.infos;
+const sql=`UPDATE seances
+ SET chapter = ?,etatDavancement = ?
+ WHERE IDSeance=? `
+const values=[chapter,sousChapitre,IDSeance];
+try{const result=await dbQuery(sql, values);
+  console.log("Success");
+  res.json(result);}
+  catch(err){res.json({message:err})}
+
+}
+
+
+exports.getGroupTableSettings = async (req, res) => {
+  const {IDEns,role} = req.query;
+  let sql;
+  let data;
+  console.log(req.query)
+  try{
+  if (role !=="teacher"){
+    sql=`SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+    FROM seances
+    JOIN enseignants ON seances.IDEns = enseignants.IDEns`
+      data = await dbQuery(sql);
+      res.json(data);
+  }
+  else{const IDProf = parseInt(IDEns);
+    sql = `SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+    FROM seances
+    JOIN enseignants ON seances.IDEns = enseignants.IDEns
+    WHERE seances.IDEns =?`;
+    data = await dbQuery(sql,IDProf);
+      res.json(data);
+  }}catch (err) {
     res.json({ message: err });
   }
 };
+
+
+exports.getTeacherSettings= async (req,res)=>{
+  try {
+    const {year,IDEns} = req.query;
+    const sql = `SELECT NumGroupe FROM seances WHERE codeClasse=? AND IDEns=? `;
+    const sql2 = `SELECT codeSalle FROM salles`;
+    const sql3 = `SELECT CodeMod FROM seances Where codeClasse=? AND IDEns=?`;
+    const sql4 = `SELECT heure FROM heures`;
+    ////////////////////////////////
+    const groupes = await dbQuery(sql,[year,IDEns]);
+    const numGroupes = groupes.map((result) => result.NumGroupe);
+    ////////////////////////////////
+    const rooms = await dbQuery(sql2);
+    const salles = rooms.map((result) => result.codeSalle);
+    /////////////// //
+    const matieres = await dbQuery(sql3,[year,IDEns]);
+    const numMatieres = matieres.map((result) => result.CodeMod);
+    ////////////////////////////////
+    const hours = await dbQuery(sql4);
+    const numHeures = hours.map((result) => result.heure);
+    ////////////////////////////////
+    const data = [numGroupes, salles, numMatieres, numHeures];
+    res.json({
+      groups: data[0],
+      rooms: data[1],
+      modules: data[2],
+      hours: data[3],
+    });
+  } catch (err) {
+    res.json(err);
+  }
+} 

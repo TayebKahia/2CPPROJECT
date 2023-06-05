@@ -30,11 +30,15 @@ router.route("/tableGroupe").get(controller.getTableGroupe);
 
 router.route("/test").post(controller.postTest).put(controller.updateTest);
 
+
+
 router
   .route("/chapters")
   .get(controller.getChapters)
   .put(controller.updateChapters);
 router.route("/sousChapitre").get(controller.getSousChapitre);
+
+router.route("/teacherSettings").get(controller.getTeacherSettings)
 
 router
   .route("/salleTable")
@@ -58,6 +62,9 @@ router
   .delete(controller.deleteGroupe);
 
 router.route(`/groupeTableSettings`).get(controller.getGroupTableSettings);
+
+
+router.route('/scheduleTable').get(controller.getScheduleTable)
 
 
 module.exports = router;
