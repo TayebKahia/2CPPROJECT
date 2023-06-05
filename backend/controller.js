@@ -11,6 +11,9 @@ const nodemailer = require("nodemailer");
 const {
   checkExists,
   sendPasswordResetEmail,
+  isFreeAdd,
+  isFreeUpdate,
+  isGroupFree
 } = require("./API features");
 //Salles Info
 
@@ -372,7 +375,7 @@ exports.getTableGroupe = async (req, res) => {
       res.json({ message: err });
     }
   } else {
-    const sql = `SELECT COALESCE(CodeMod, 'VIDE') AS CodeMod, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+    const sql = `SELECT COALESCE(CodeMod, 'Empty') AS CodeMod, COALESCE(enseignants.Nom, 'Empty') AS Nom,COALESCE(chapter, 'Empty') AS Chapitre,COALESCE(etatDavancement, 'Empty') AS etatDavancement
       FROM seances
       LEFT JOIN enseignants ON seances.IDEns = enseignants.IDEns
       WHERE codeClasse = ? AND NumGroupe = ?`;
@@ -385,44 +388,7 @@ exports.getTableGroupe = async (req, res) => {
     }
   }
 };
-const isGroupFree = async (NumGroupe,day,hour)=>{
- const groupSql=`SELECT * FROM seances WHERE jour =? AND heure =? AND NumGroupe=? `
- try{
-  const result = await dbQuery(groupSql,[day,hour,NumGroupe])
-  return result.length === 0 || result[0]?.IDSeance === parseInt(IDSeance);
- } catch (err) {
-  console.error(err);
-  throw err;
-}
-}
 
-const isFreeUpdate = async (day, salle, hour, IDSeance) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
-
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0 || data[0]?.IDSeance === parseInt(IDSeance);
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
-const isFreeAdd = async (day, salle, hour) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
-
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
 
 exports.updateTest = async (req, res) => {
   try {
@@ -431,10 +397,8 @@ exports.updateTest = async (req, res) => {
 
     const teachSql = `SELECT IDEns FROM enseignants WHERE Nom = ?`;
     const result = await dbQuery(teachSql, teacher);
-    console.log(result[0].IDEns);
     const groupFree = await isGroupFree(day,hour,group)
     const isRoomFree = await isFreeUpdate(day, salle, hour, IDSeance);
-
     if (isRoomFree) {
       if (groupFree) {
       const updateSql = `UPDATE seances 
@@ -454,16 +418,14 @@ exports.updateTest = async (req, res) => {
 
       await dbQuery(updateSql, updateValues);
       return res.json({ message: "Success" });
-    }else {res.json({message: "Group alredy has a session"})}  
-  } else {
-      return res.json({ message: "Room already being Used" });
+    }else {res.json({message: "Group already has a session"})}} 
+    else { return res.json({ message: "Room already being Used" });
     }
   } catch (err) {
     console.error(err);
     return res.json({ message: "An Update Error Occurred" });
   }
 };
-
 exports.postTest = async (req, res) => {
   try {
     const { year, day, hour, salle, type, group, module, teacher } =
@@ -602,19 +564,25 @@ try{const result=await dbQuery(sql, values);
 
 
 exports.getGroupTableSettings = async (req, res) => {
-  const IDEns = req.query.IDEns;
-  const IDProf = parseInt(IDEns);
-  sql = `SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
-  FROM seances
-  JOIN enseignants ON seances.IDEns = enseignants.IDEns
-  WHERE seances.IDEns =?`;
-  try {
+  const {IDEns,role} = req.query;
+  let sql;
+  if (role !="teacher"){
+    sql=`SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+    FROM seances
+    JOIN enseignants ON seances.IDEns = enseignants.IDEns`
+  }
+  else{const IDProf = parseInt(IDEns);
+    sql = `SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+    FROM seances
+    JOIN enseignants ON seances.IDEns = enseignants.IDEns
+    WHERE seances.IDEns =?`;
+    try {
     const data = await dbQuery(sql, IDProf);
     res.json(data);
   } catch (err) {
     res.json({ message: err });
   }
-};
+}};
 
 
 exports.getTeacherSettings= async (req,res)=>{

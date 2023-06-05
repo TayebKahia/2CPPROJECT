@@ -1,4 +1,6 @@
 const db = require("./db-config");
+const util = require("util");
+const dbQuery = util.promisify(db.query).bind(db);
 //exports.checkSalleExist=function (salle) {
 
 function checkExist(whatToCheck, dbtable, whereToCheck) {
@@ -52,8 +54,49 @@ async function sendPasswordResetEmail(email, OTP) {
     throw new Error("Failed to send password reset email");
   }
 }
+const isGroupFree = async (NumGroupe,day,hour)=>{
+  const groupSql=`SELECT * FROM seances WHERE jour =? AND heure =? AND NumGroupe=? `
+  try{
+   const result = await dbQuery(groupSql,[day,hour,NumGroupe])
+   return result.length === 0 || result[0]?.IDSeance === parseInt(IDSeance);
+  } catch (err) {
+   console.error(err);
+   throw err;
+ }
+ }
+ 
+ const isFreeUpdate = async (day, salle, hour, IDSeance) => {
+   try {
+     const freeSql =
+       "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
+     const freeValues = [day, salle, hour];
+ 
+     const data = await dbQuery(freeSql, freeValues);
+     return data.length === 0 || data[0]?.IDSeance === parseInt(IDSeance);
+   } catch (err) {
+     console.error(err);
+     throw err;
+   }
+ };
+ 
+ const isFreeAdd = async (day, salle, hour) => {
+   try {
+     const freeSql =
+       "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
+     const freeValues = [day, salle, hour];
+ 
+     const data = await dbQuery(freeSql, freeValues);
+     return data.length === 0;
+   } catch (err) {
+     console.error(err);
+     throw err;
+   }
+ };
 
 module.exports = {
   checkExist,
   sendPasswordResetEmail,
+  isFreeAdd,
+  isFreeUpdate,
+  isGroupFree
 };
