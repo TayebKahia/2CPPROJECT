@@ -296,7 +296,7 @@ exports.createUser = async (req, res) => {
       return res
         .status(200)
         .json({ message: "Registration successful", data: data });
-    // }
+    }
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Internal server error" });
@@ -671,21 +671,7 @@ exports.getChapters = async (req, res) => {
   }
 };
 
-exports.getSousChapitre = async (req,res)=>{
-  const {module,chapitre}=req.query
-    let data = await dbQuery(
-      `SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
-      `,
-      module
-    );
-    const chapter = data.map((result) => result.chapter);
-    // console.log(chapter)
-    res.json({ chapter });
-  } catch (err) {
-    console.log(err);
-    res.json({ message: err });
-  }
-};
+
 
 exports.getSousChapitre = async (req, res) => {
   const { module, chapitre } = req.query;

@@ -93,33 +93,7 @@ const isGroupFree = async (NumGroupe,day,hour)=>{
    }
  };
 
-const isFreeUpdate = async (day, salle, hour, IDSeance) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
 
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0 || data[0]?.IDSeance === parseInt(IDSeance);
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
-const isFreeAdd = async (day, salle, hour) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
-
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
 
 
 
