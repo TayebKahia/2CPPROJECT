@@ -7,27 +7,32 @@ const jwt_secret = "dskjdafjhkvhjak25454h21xc(0][]{}dfkjahpsofjv05";
 const db = require("./db-config");
 const util = require("util");
 const dbQuery = util.promisify(db.query).bind(db);
-const nodemailer = require("nodemailer");
 const {
-  checkExists,
+  checkGroupeExist,
+  checkExist,
   sendPasswordResetEmail,
+  isFreeUpdate,
+  isFreeAdd,
 } = require("./API features");
 //Salles Info
 
-exports.getAllInfos = async (req, res) => {
-  const sql = "SELECT * from salles ";
-  const sql1 = "SELECT * from modules ";
-  const sql2 = "SELECT * from groupes ";
-  const salles = await dbQuery(sql);
-  const modules = await dbQuery(sql1);
-  const groupes = await dbQuery(sql2);
-  res.json({ salles: salles, modules: modules, groupes: groupes });
+exports.getSalle = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM salles";
+    const result = await dbQuery(sql);
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the salle data." });
+  }
 };
 
 exports.createSalle = async (req, res) => {
   const { codeSalle, desSalle, capacite } = req.body;
   try {
-    const salleExist = await checkExist(codeSalle,"salles","codeSalle");
+    const salleExist = await checkExist(codeSalle, "salles", "codeSalle");
     if (salleExist) {
       return res.status(409).json({ error: "Salle deja exister" });
     } else {
@@ -45,29 +50,56 @@ exports.createSalle = async (req, res) => {
 };
 
 exports.updateSalle = async (req, res) => {
-  const sql = `UPDATE salles
-  SET desSalle = ?, capacite = ?
-  WHERE codeSalle = ?`;
+  try {
+    const { IDSalle, desSalle, capacite, codeSalle } = req.body;
+    const sql = `UPDATE salles
+      SET desSalle = ?, capacite = ?, codeSalle = ?
+      WHERE IDSalle = ?`;
+    const values = [desSalle, parseInt(capacite), codeSalle, parseInt(IDSalle)];
 
-  const { desSalle, capacite, codeSalle } = req.body;
-  const values = [desSalle, parseInt(capacite), codeSalle];
-
-  const result = await dbQuery(sql, values);
-  res.json(result);
+    const result = await dbQuery(sql, values);
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the salle." });
+  }
 };
 
 exports.deleteSalle = async (req, res) => {
-  sql = "DELETE FROM salles WHERE codeSalle=?";
-  const { codeSalle } = req.body;
-  const result = await dbQuery(sql, [codeSalle]);
-  res.json({ message: "Salle deleted successfully" });
+  try {
+    const { IDSalle } = req.body;
+    const sql = "DELETE FROM salles WHERE IDSalle = ?";
+
+    const result = await dbQuery(sql, [IDSalle]);
+    res.json({ message: "Salle deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the salle." });
+  }
 };
 
 // Modules INFO
+exports.getModule = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM modules ORDER BY codeMod";
+    const result = await dbQuery(sql);
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the module data." });
+  }
+};
+
 exports.createModule = async (req, res) => {
   const { CodeMod, DesMod, codeClasse } = req.body;
   try {
-    const moduleExist = await checkExist(CodeMod,"modules","CodeMod");
+    const moduleExist = await checkExist(CodeMod, "modules", "CodeMod");
     if (moduleExist) {
       return res.status(409).json({ error: "Module already exists" });
     } else {
@@ -85,53 +117,178 @@ exports.createModule = async (req, res) => {
 };
 
 exports.updateModule = async (req, res) => {
-  const sql = `UPDATE modules
-  SET CodeMod = ?, DesMod = ? , codeClasse = ?
-  WHERE IDMod=?`;
-  const { CodeMod, DesMod, codeClasse, IDMod } = req.body;
-  const values = [CodeMod, DesMod, codeClasse, IDMod];
-  const result = await dbQuery(sql, values);
-  res.json(result);
+  try {
+    const { CodeMod, DesMod, codeClasse, IDMod } = req.body;
+    const sql = `UPDATE modules
+      SET CodeMod = ?, DesMod = ?, codeClasse = ?
+      WHERE IDMod = ?`;
+    const values = [CodeMod, DesMod, codeClasse, IDMod];
+    const result = await dbQuery(sql, values);
+    res.json(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the module." });
+  }
 };
 
 exports.deleteModule = async (req, res) => {
-  sql = "DELETE FROM modules WHERE IDMod=?";
-  const { IDMod } = req.body;
-  const result = await dbQuery(sql, [parseInt(IDMod)]);
-  res.json({ message: "Module deleted successfully" });
+  try {
+    const { IDMod } = req.body;
+
+    if (!IDMod) {
+      return res.status(400).json({ error: "IDMod is required" });
+    }
+
+    const sql = "DELETE FROM modules WHERE IDMod = ?";
+    const result = await dbQuery(sql, [parseInt(IDMod)]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Module not found" });
+    }
+
+    res.json({ message: "Module deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the module." });
+  }
+};
+
+//Groupes INFO
+exports.getGroupe = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM groupes";
+    const result = await dbQuery(sql);
+    res.json(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving the groupes." });
+  }
+};
+
+exports.createGroupe = async (req, res) => {
+  const { codeClasse, NumGroupe, section } = req.body;
+  try {
+    const groupeExist = await checkGroupeExist(codeClasse, NumGroupe);
+    if (groupeExist) {
+      return res.status(409).json({ error: "Groupe deja exister" });
+    } else {
+      const sql =
+        "INSERT INTO groupes (codeClasse,NumGroupe,section) VALUES (?)";
+      const values = [codeClasse, NumGroupe, section];
+      const data = await dbQuery(sql, [values]);
+      return res
+        .status(200)
+        .json({ message: "Groupe added successful", data: data });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.updateGroupe = async (req, res) => {
+  try {
+    const { codeClasse, NumGroupe, section, IDGroupe } = req.body;
+
+    if (!codeClasse || !NumGroupe || !section || !IDGroupe) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const sql = `UPDATE groupes
+      SET codeClasse = ?, NumGroupe = ?, section = ?
+      WHERE IDGroupe = ?`;
+
+    const values = [codeClasse, NumGroupe, section, parseInt(IDGroupe)];
+    const result = await dbQuery(sql, values);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Groupe not found" });
+    }
+
+    res.json(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the groupe." });
+  }
+};
+
+exports.deleteGroupe = async (req, res) => {
+  try {
+    const { IDGroupe } = req.body;
+
+    if (!IDGroupe) {
+      return res.status(400).json({ error: "IDGroupe is required" });
+    }
+    const sql = "DELETE FROM groupes WHERE IDGroupe = ?";
+    const values = [parseInt(IDGroupe)];
+    const result = await dbQuery(sql, values);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Groupe not found" });
+    }
+    res.json({ message: "Groupe deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the groupe." });
+  }
 };
 
 // Users Info
 exports.getUser = async (req, res) => {
-  const sql = "SELECT * FROM enseignants "; // enseignants hold all users infos such as emaill pass etc..
-  const result = await dbQuery(sql);
-  res.json(result);
+  try {
+    const sql = `SELECT * FROM enseignants WHERE role <> 'admin'`;
+    const result = await dbQuery(sql);
+    res.json(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving the users." });
+  }
 };
 
 exports.updateUser = async (req, res) => {
-  const sql = `UPDATE enseignants
-  SET Nom = ?, email =?, role=?
-  WHERE IDEns=?`;
-  const { IDEns, Nom, email, role } = req.body;
-  console.log(req.body);
-
-  const values = [Nom, email, role, parseInt(IDEns)];
-  const result = await dbQuery(sql, values);
-
-  res.json(result);
-};
-exports.createUser = async (req, res) => {
-  const { Nom, email, password, role } = req.body;
-  console.log(req.body);
   try {
-    const emailExists = await checkExist(email,"enseignants","email");
+    const { IDEns, Prenom, Nom, email, role, password } = req.body;
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const sql = `UPDATE enseignants
+      SET Nom = ?, Prenom = ?, email = ?, role = ?, password = ?
+      WHERE IDEns = ?`;
+    const values = [
+      Nom,
+      Prenom,
+      email,
+      role,
+      encryptedPassword,
+      parseInt(IDEns),
+    ];
+
+    const result = await dbQuery(sql, values);
+
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the user." });
+  }
+};
+
+exports.createUser = async (req, res) => {
+  const { Nom, Prenom, email, password, role } = req.body;
+  try {
+    const emailExists = await checkExist(email, "enseignants", "email");
     if (emailExists) {
       return res.status(409).json({ error: "Email already exists" });
     } else {
       const encryptedpassword = await bcrypt.hash(password, 10);
       const sql =
-        "INSERT INTO enseignants (Nom, email, password, role) VALUES (?)";
-      const values = [Nom, email, encryptedpassword, role];
+        "INSERT INTO enseignants (Nom,Prenom, email, password, role) VALUES (?)";
+      const values = [Nom, Prenom, email, encryptedpassword, role];
       const data = await dbQuery(sql, [values]);
       console.log(data);
       return res
@@ -145,17 +302,29 @@ exports.createUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-  sql = "DELETE FROM enseignants WHERE IDEns=?";
-  const { IDEns } = req.body;
-  const result = await dbQuery(sql, [parseInt(IDEns)]);
-  res.json({ message: "User deleted successfully" });
+  try {
+    const { IDEns } = req.body;
+    if (!IDEns) {
+      return res.status(400).json({ error: "IDEns is required" });
+    }
+    const sql = "DELETE FROM enseignants WHERE IDEns = ?";
+    const values = [parseInt(IDEns)];
+    const result = await dbQuery(sql, values);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the user." });
+  }
 };
 
 // LOGIN API
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
     const sql = "SELECT * FROM enseignants WHERE email = ?";
     const values = [email];
 
@@ -173,8 +342,8 @@ exports.loginUser = async (req, res) => {
         .json({ success: false, error: "Invalid credentials" });
     }
 
-    const tokenPayload = { email, role };
-    const token = jwt.sign(tokenPayload, jwt_secret, { expiresIn: "1h" });
+    // const tokenPayload = { email, role };
+    // const token = jwt.sign(tokenPayload, jwt_secret, { expiresIn: "1h" });
 
     return res.status(200).json({ success: true, role, IDEns });
   } catch (error) {
@@ -187,17 +356,23 @@ exports.loginUser = async (req, res) => {
 
 exports.ForgotPassword = async (req, res) => {
   try {
-    const { email, OTP } = req.body;
+    const { email } = req.body;
+    console.log(req.body);
+    const OTP = Math.floor(Math.random() * 9000 + 1000);
     const sql = "SELECT * FROM enseignants WHERE email = ?";
+    const OTPSql = "UPDATE enseignants SET OTP=? where email =? ";
+    const otpvalues = [OTP, email];
+    const otpSent = await dbQuery(OTPSql, otpvalues);
     const values = [email];
     const result = await dbQuery(sql, values);
-    console.log(result);
     if (result.length === 0) {
       console.log("error happen in length");
       return res.status(401).json({ success: false, error: "Invalid email" });
     }
     const { IDEns } = result[0];
-    await sendPasswordResetEmail(email, OTP);
+    const html = process.env.HTML;
+    const htmlWithOTP = html.replace("${OTP}", OTP);
+    await sendPasswordResetEmail(email, htmlWithOTP);
 
     res.status(200).json({
       IDEns: IDEns,
@@ -209,41 +384,25 @@ exports.ForgotPassword = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+exports.confirmOTP = async (req, res) => {
+  try {
+    const { IDEns } = req.body;
+    console.log(req.body);
+    const sql = "SELECT * FROM enseignants WHERE IDEns = ?";
+    const values = [IDEns];
+    const result = await dbQuery(sql, values);
+    const { OTP } = result[0];
+    console.log(OTP);
+    res.status(200).json({
+      OTP: OTP,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
-//get
-// exports.resetPassword = async(req, res) => {
-// const {IDEns,token} = req.params;
-//   const sql = "SELECT * FROM enseignants WHERE IDEns = ?";
-//   const values = [IDEns];
-
-//   db.query(sql, values, async (err, result) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).json({ error: "Internal Server Error" });
-//     }
-
-//     if (result.length === 0) {
-//       return res
-//         .status(401)
-//         .json({error: "User Not Exist" });
-//     }
-
-//     const {password} = result[0];
-//     const secret=jwt_secret+password;
-
-//     try{
-//       const verify=jwt.verify(token,secret);
-//       res.send('Verified')
-//     }catch(err){
-//       res.send('Not Verified')
-//     }
-
-// })
-
-// }
-
-//post
-exports.confirmPassword = async (req, res) => {
+exports.updatePassword = async (req, res) => {
   try {
     const { IDEns, password } = req.body;
     const IDsql = "SELECT * FROM enseignants WHERE IDEns = ?";
@@ -255,7 +414,6 @@ exports.confirmPassword = async (req, res) => {
     }
     /*const secret = jwt_secret + password;
     const verify = jwt.verify(token, secret);*/
-    console.log(result);
     const encryptedpassword = await bcrypt.hash(password, 10);
     console.log(encryptedpassword);
     const sql = "UPDATE enseignants SET password =? WHERE IDEns =?";
@@ -317,7 +475,7 @@ exports.getSettings = async (req, res) => {
 
 exports.getSettingsTable = async (req, res) => {
   const { year, day } = req.query;
-  const sql = `SELECT IDSeance, codeClasse AS 'year', jour AS day, heure AS hour, codeType AS type, codeSalle AS salle, CodeMod AS module, enseignants. Nom AS teacher, NumGroupe AS 'group' FROM seances
+  const sql = `SELECT IDSeance,seances.IDEns , codeClasse AS 'year', jour AS day, heure AS hour, codeType AS type, codeSalle AS salle, CodeMod AS module, enseignants.Nom AS teacher, NumGroupe AS 'group' FROM seances
      JOIN enseignants ON seances.IDEns = enseignants.IDEns
     WHERE jour = ? AND codeClasse = ?
     ORDER BY NumGroupe`;
@@ -399,34 +557,6 @@ exports.getTableGroupe = async (req, res) => {
   }
 };
 
-const isFreeUpdate = async (day, salle, hour, IDSeance) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
-
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0 || data[0]?.IDSeance === parseInt(IDSeance);
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
-const isFreeAdd = async (day, salle, hour) => {
-  try {
-    const freeSql =
-      "SELECT * FROM seances WHERE jour = ? AND codeSalle = ? AND heure = ?";
-    const freeValues = [day, salle, hour];
-
-    const data = await dbQuery(freeSql, freeValues);
-    return data.length === 0;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
 exports.updateTest = async (req, res) => {
   try {
     const { year, day, hour, salle, type, group, module, IDSeance, teacher } =
@@ -505,43 +635,61 @@ exports.deleteSettingsTable = async (req, res) => {
   }
 };
 
-exports.addRoom = async (req, res) => {
+exports.getChapters = async (req, res) => {
+  const { module } = req.query;
+  console.log("GetChapter " + req.query);
   try {
-    const selectQuery = "SELECT * FROM salles WHERE codeSalle=?";
-    const selectValues = [req.body.codeSalle];
-    console.log(selectValues);
-    const rooms = await dbQuery(selectQuery, selectValues);
-
-    if (rooms.length === 0) {
-      const insertQuery =
-        "INSERT INTO salles (codeSalle, desSalle, capacite) VALUES (?, ?, ?)";
-      const insertValues = [
-        req.body.codeSalle,
-        req.body.desSalle,
-        req.body.capacite,
-      ];
-      await db.query(insertQuery, insertValues);
-      return res
-        .status(201)
-        .json({ success: true, message: "Room created successfully" });
-    }
-
-    return res.json({ message: "Room already exists" });
-  } catch (error) {
-    return res.json({ success: false, message: error.message });
+    let data = await dbQuery(
+      `SELECT DISTINCT chapter FROM chaptertable WHERE CodeMod = ? ORDER BY chapter ASC
+      `,
+      module
+    );
+    const chapter = data.map((result) => result.chapter);
+    // console.log(chapter)
+    res.json({ chapter });
+  } catch (err) {
+    console.log(err);
+    res.json({ message: err });
   }
 };
 
-exports.getChapters = async (req, res) => { 
-  
+exports.getSousChapitre = async (req, res) => {
+  const { module, chapitre } = req.query;
+  try {
+    data = await dbQuery(
+      `SELECT sousChapitre from chaptertable WHERE CodeMod=? AND chapter =? ORDER BY sousChapitre ASC`,
+      [module, chapitre]
+    );
+    const sousChapitre = data.map((result) => result.sousChapitre);
+    console.log("GetSousChapitre" + sousChapitre);
+    res.json({ sousChapitre });
+  } catch (err) {
+    console.log(err);
+    res.json({ message: err });
+  }
 };
 
+exports.updateChapters = async (req, res) => {
+  const { IDSeance, chapter, sousChapitre } = req.body.infos;
+  console.log(req.body.infos);
+  const sql = `UPDATE seances
+ SET chapter = ?,etatDavancement = ?
+ WHERE IDSeance=? `;
+  const values = [chapter, sousChapitre, IDSeance];
+  try {
+    const result = await dbQuery(sql, values);
+    console.log(result);
+    res.json(result);
+  } catch (err) {
+    res.json({ message: err });
+  }
+};
 exports.getGroupTableSettings = async (req, res) => {
   console.log(req.query);
   const IDEns = req.query.IDEns;
   const IDProf = parseInt(IDEns);
   console.log(IDProf);
-  sql = `SELECT COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
+  sql = `SELECT IDSeance,COALESCE(CodeMod, 'VIDE') AS CodeMod,codeClasse,NumGroupe as groupe, COALESCE(enseignants.Nom, 'VIDE') AS Nom,COALESCE(chapter, 'VIDE') AS Chapitre,COALESCE(etatDavancement, 'VIDE') AS etatDavancement
   FROM seances
   JOIN enseignants ON seances.IDEns = enseignants.IDEns
   WHERE seances.IDEns =?`;

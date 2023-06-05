@@ -105,3 +105,51 @@ exports.deleteUser = async (req, res) => {
   const result = await dbQuery(sql, [IDEns]);
   res.json({ message: "User deleted successfully" });
 };
+
+
+exports.ForgotPassword = async (req, res) => {
+  try {
+    const { email} = req.body;
+    const OTP = Math.floor(Math.random() * 9000 + 1000);
+    const sql = "SELECT * FROM enseignants WHERE email = ?";
+    const OTPSql="UPDATE enseignants SET OTP=? where email =? ";
+    const otpvalues=[OTP,email];
+    const otpSent=await dbQuery(OTPSql,otpvalues);
+    const values = [email];
+    const result = await dbQuery(sql, values);
+    if (result.length === 0) {
+      console.log("error happen in length");
+      return res.status(401).json({ success: false, error: "Invalid email" });
+    }
+    const { IDEns } = result[0];
+    const html = process.env.HTML;
+    const htmlWithOTP = html.replace("${OTP}", OTP);
+    await sendPasswordResetEmail(email, htmlWithOTP);
+
+    res.status(200).json({
+      IDEns: IDEns,
+      success: true,
+      message: "Password reset email sent successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+exports.confirmOTP= async (req, res) => {
+  try {
+    const {IDEns} = req.body;
+    const sql = "SELECT * FROM enseignants WHERE IDEns = ?";
+    const values = [IDEns];
+    const result = await dbQuery(sql, values);
+    const {OTP} = result[0];
+    res.status(200).json({
+      OTP:OTP
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
