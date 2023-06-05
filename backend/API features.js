@@ -54,16 +54,17 @@ async function sendPasswordResetEmail(email, html) {
     throw new Error("Failed to send password reset email");
   }
 }
-const isGroupFree = async (NumGroupe,day,hour)=>{
-  const groupSql=`SELECT * FROM seances WHERE jour =? AND heure =? AND NumGroupe=? `
-  try{
-   const result = await dbQuery(groupSql,[day,hour,NumGroupe])
-   return result.length === 0 || result[0]?.IDSeance === parseInt(IDSeance);
+const isGroupFree = async (NumGroupe, day, hour, IDSeance) => {
+  const groupSql = `SELECT * FROM seances WHERE jour = ? AND heure = ? AND NumGroupe = ?`;
+  try {
+    const result = await dbQuery(groupSql, [day, hour, NumGroupe]);
+    return result.length === 0 || result[0]?.IDSeance === parseInt(IDSeance);
   } catch (err) {
-   console.error(err);
-   throw err;
- }
- }
+    console.error(err);
+    throw err;
+  }
+};
+
  
  const isFreeUpdate = async (day, salle, hour, IDSeance) => {
    try {
